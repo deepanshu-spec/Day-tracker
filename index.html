@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Day Tracker Pro</title>
+<link rel="manifest" href="manifest.json" />
+<meta name="theme-color" content="#2563eb" />
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+:root {
+  --primary: #2563eb;
+  --bg-light: #ffffff;
+  --bg-dark: #1f2937;
+  --text-light: #1f2937;
+  --text-dark: #f9fafb;
+  --overlay: rgba(0,0,0,0.6);
+  --card1: #60a5fa;
+  --card2: #facc15;
+  --card3: #34d399;
+  --card4: #f87171;
+  --card5: #8f75da;
+}
+body {
+  margin: 0;
+  font-family: system-ui, sans-serif;
+  background: var(--bg-light);
+  color: var(--text-light);
+  transition: background 0.3s, color 0.3s;
+}
+body.dark {
+  background: var(--bg-dark);
+  color: var(--text-dark);
+}
+header {
+  background: var(--primary);
+  color: white;
+  padding: 0.8rem 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+header h1 { margin: 0; font-size: 1.2rem; }
+header .actions button {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+}
+nav {
+  display: flex;
+  overflow-x: auto;
+  background: white;
+}
+body.dark nav { background: #374151; }
+nav .tab-btn {
+  padding: 0.6rem 1rem;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+body.dark nav .tab-btn { color: white; }
+nav .tab-btn.active {
+  background: var(--primary);
+  color: white;
+}
+.tab-close {
+  margin-left: 6px;
+  cursor: pointer;
+  color: #f87171;
+}
+
+
+.actions {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.action-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  color: white;
+  position: relative;
+}
+
+.action-btn small {
+  font-size: 0.7rem;
+  margin-top: 2px;
+  opacity: 0.9;
+
+  /* Fix left margin or spacing */
+  margin-left: 0;
+  padding-left: 0;
+  text-align: center;
+  display: block; /* make sure small acts like a block and centers properly */
+  width: 100%;
+}
+
+/* Hover tooltip */
+.action-btn::after {
+  content: attr(title);
+  position: absolute;
+  bottom: -1.8rem;
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 3px 6px;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.action-btn:hover::after {
+  opacity: 1;
+}
+
+
+
+
+.plus-tab { font-weight: bold; }
+main { padding: 1rem; }
+
+/* Dashboard */
+.dashboard-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+}
+.dashboard-card {
+  border-radius: 12px;
+  padding: 1rem;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+.dashboard-card:nth-child(1) { background: var(--card1); }
+.dashboard-card:nth-child(2) { background: var(--card2); }
+.dashboard-card:nth-child(3) { background: var(--card3); }
+.dashboard-card:nth-child(4) { background: var(--card4); }
+.dashboard-card:nth-child(5) { background: var(--card5); }
+.card-progress { background: rgba(255,255,255,0.3); height: 8px; border-radius: 5px; overflow: hidden; margin: 0.5rem 0; }
+.card-progress-bar { height: 100%; background: white; width: 0%; }
+
+/* Tracker */
+.progress-container { background: #ddd; border-radius: 10px; overflow: hidden; height: 10px; margin: 0.5rem 0; }
+.progress-bar { background: var(--primary); height: 100%; width: 0; transition: width 0.4s ease; }
+.week-title { font-weight: bold; margin-top: 1rem; }
+label.checkbox {
+  display: flex; align-items: center; gap: 0.8rem;
+  background: white; padding: 0.7rem 1rem; border-radius: 12px;
+  cursor: pointer; margin-bottom: 0.5rem;
+}
+body.dark label.checkbox { background: #374151; }
+input[type="checkbox"] { display: none; }
+.checkmark {
+  width: 24px; height: 24px; background: #e5e7eb; border-radius: 6px;
+  position: relative; transition: background 0.3s;
+}
+input:checked + .checkmark { background: var(--primary); animation: pop 0.3s ease; }
+@keyframes pop { 50% { transform: scale(1.3); } }
+.checkmark svg {
+  position: absolute; top: 3px; left: 5px; width: 14px; height: 14px;
+  stroke: white; stroke-width: 3; fill: none; opacity: 0; transition: opacity 0.2s;
+}
+input:checked + .checkmark svg { opacity: 1; }
+
+/* Modal with Floating Labels */
+.modal-overlay {
+  position: fixed; top:0; left:0; right:0; bottom:0;
+  background: var(--overlay); display: none;
+  align-items: center; justify-content: center; z-index: 100;
+}
+.modal {
+  background: white; border-radius: 12px; padding: 1rem;
+  width: 90%; max-width: 400px; text-align: center;
+}
+body.dark .modal { background: #1f2937; color: white; }
+.modal h2 { margin-top: 0; }
+.form-group { position: relative; margin-top: 1.5rem; }
+.modal input {
+  width: 100%; padding: 10px 10px 10px 5px;
+  border: none; border-bottom: 2px solid #ccc;
+  background: transparent; font-size: 1rem;
+  color: inherit;
+}
+.modal input:focus { outline: none; border-bottom: 2px solid var(--primary); }
+.modal label {
+  position: absolute; top: 10px; left: 5px;
+  font-size: 1rem; color: #999;
+  transition: 0.3s ease all; pointer-events: none;
+}
+.modal input:focus ~ label,
+.modal input:valid ~ label {
+  top: -10px; font-size: 0.8rem; color: var(--primary);
+}
+.modal button {
+  margin-top: 1rem; padding: 0.6rem; width: 100%;
+  border-radius: 8px; font-size: 1rem;
+  background: var(--primary); color: white; border: none;
+  cursor: pointer;
+}
+
+/* Celebration */
+.celebration-popup {
+  position: fixed; top: 15%; left: 50%; transform: translateX(-50%);
+  background: var(--primary); color: white;
+  padding: 1rem 1.5rem; border-radius: 12px;
+  font-size: 1.1rem; opacity: 0; transition: opacity 0.3s;
+  z-index: 200;
+}
+.celebration-popup.show { opacity: 1; }
+#confetti-canvas {
+  position: fixed; top:0; left:0; width:100%; height:100%;
+  pointer-events: none; z-index: 199;
+}
+
+
+
+
+
+</style>
+</head>
+
+<script>
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("./sw.js")
+    .then(() => console.log("✅ Service Worker registered"))
+    .catch((err) => console.error("SW registration failed:", err));
+}
+</script>
+
+
+
+
+
+
+
+<body>
+<canvas id="confetti-canvas"></canvas>
+
+<header>
+
+  <h1>Day Tracker</h1>
+  <div class="actions">
+    <button onclick="toggleDarkMode()"><span class="material-icons">brightness_6</span></button>
+    <div class="action-btn" onclick="exportData()" title="Export Data">
+      <span class="material-icons">file_upload</span>
+      <small>Export</small>
+    </div>
+    <div class="action-btn" onclick="importData()" title="Import Data">
+      <span class="material-icons">file_download</span>
+      <small>Import</small>
+    </div>
+    <div class="action-btn" id="resetBtn" style="display:none;" title="Reset">
+      <span class="material-icons">restart_alt</span>
+      <small>Reset</small>
+    </div>
+  </div>
+</header>
+
+<nav id="tabs"></nav>
+<main id="content"></main>
+
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal" id="modalBox">
+    <h2 id="modalTitle"></h2>
+    <div id="modalBody"></div>
+  </div>
+</div>
+
+<div class="celebration-popup" id="celebrationPopup"></div>
+
+<script>
+let allTabs = JSON.parse(localStorage.getItem('allTabs')) || { Dashboard: null };
+let currentTab = localStorage.getItem('currentTab') || 'Dashboard';
+let completedWeeks = JSON.parse(localStorage.getItem('completedWeeks')) || {};
+let completedTabs = JSON.parse(localStorage.getItem('completedTabs')) || {};
+
+function saveTabs() {
+  localStorage.setItem('allTabs', JSON.stringify(allTabs));
+  localStorage.setItem('currentTab', currentTab);
+  localStorage.setItem('completedWeeks', JSON.stringify(completedWeeks));
+  localStorage.setItem('completedTabs', JSON.stringify(completedTabs));
+}
+
+function toggleDarkMode(){
+  document.body.classList.toggle('dark');
+  localStorage.setItem('darkMode', document.body.classList.contains('dark'));
+}
+if(localStorage.getItem('darkMode')==='true') document.body.classList.add('dark');
+
+function launchConfetti(intensity) {
+  const canvas = document.getElementById('confetti-canvas');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  let particles = [];
+  for (let i = 0; i < intensity; i++) {
+    particles.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height - canvas.height,
+      r: Math.random() * 6 + 4,
+      d: Math.random() * intensity,
+      color: `hsl(${Math.random()*360}, 100%, 50%)`
+    });
+  }
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particles.forEach(p => {
+      ctx.beginPath();
+      ctx.fillStyle = p.color;
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI*2, true);
+      ctx.fill();
+    });
+    update();
+  }
+  function update() {
+    particles.forEach(p => {
+      p.y += Math.cos(p.d) + 1 + p.r/2;
+      p.x += Math.sin(p.d);
+      if (p.y > canvas.height) {
+        p.x = Math.random() * canvas.width;
+        p.y = -10;
+      }
+    });
+  }
+  let interval = setInterval(draw, 20);
+  setTimeout(() => { clearInterval(interval); ctx.clearRect(0,0,canvas.width,canvas.height); }, 4000);
+}
+
+function showCelebrationPopup(message, full=false) {
+  const pop = document.getElementById('celebrationPopup');
+  pop.textContent = message;
+  pop.classList.add('show');
+  launchConfetti(full ? 200 : 60);
+  setTimeout(() => pop.classList.remove('show'), 3000);
+}
+
+function checkCelebrations(data) {
+  // Check each week
+  data.weeks.forEach((w, i) => {
+    const key = `${currentTab}-w${i}`;
+    const isComplete = w.every(d => d.checked);
+    
+    if (isComplete && !completedWeeks[key]) {
+      // Mark as complete and celebrate
+      completedWeeks[key] = true;
+      saveTabs();
+      showCelebrationPopup(`Week ${i + 1} complete`, false);
+    }
+    else if (!isComplete && completedWeeks[key]) {
+      // Reset so it can celebrate again
+      completedWeeks[key] = false;
+      saveTabs();
+    }
+  });
+  
+  // Check entire tab completion
+  const allComplete = data.weeks.every(w => w.every(d => d.checked));
+  if (allComplete && !completedTabs[currentTab]) {
+    completedTabs[currentTab] = true;
+    saveTabs();
+    showCelebrationPopup(`All done for ${currentTab}!`, true);
+  }
+  else if (!allComplete && completedTabs[currentTab]) {
+    completedTabs[currentTab] = false;
+    saveTabs();
+  }
+}
+
+function showModal(title, html, onSubmit) {
+  document.getElementById('modalTitle').textContent = title;
+  document.getElementById('modalBody').innerHTML = html;
+  document.getElementById('modalOverlay').style.display='flex';
+  const form = document.querySelector('#modalBody form');
+  if(form) form.onsubmit = e => { e.preventDefault(); onSubmit(new FormData(form)); document.getElementById('modalOverlay').style.display='none'; };
+}
+
+function createTrackerData(fd) {
+  const topic = fd.get('topic');
+  const days = parseInt(fd.get('days'));
+  const start = new Date(fd.get('startDate'));
+  const weeks = [];
+  let cur=[];
+  for(let i=0;i<days;i++){
+    const d=new Date(start);d.setDate(start.getDate()+i);
+    const lbl=`${d.toLocaleDateString('en-US',{weekday:'long'})} (${d.toLocaleDateString('en-GB')})`;
+    cur.push({label:lbl,checked:false});
+    if((i+1)%7===0||i===days-1){weeks.push(cur);cur=[];}
+  }
+  return {topic,weeks};
+}
+
+function renderTabs(){
+  const nav=document.getElementById('tabs');nav.innerHTML='';
+  const dash=document.createElement('button');dash.className='tab-btn'+(currentTab==='Dashboard'?' active':'');dash.textContent='Dashboard';
+  dash.onclick=()=>{currentTab='Dashboard';saveTabs();render();};nav.appendChild(dash);
+  Object.keys(allTabs).forEach(tab=>{
+    if(tab==='Dashboard') return;
+    const btn=document.createElement('button');btn.className='tab-btn'+(currentTab===tab?' active':'');btn.textContent=tab;
+    btn.onclick=()=>{currentTab=tab;saveTabs();render();};
+    const close=document.createElement('span');close.className='tab-close';close.textContent='×';
+    close.onclick=e=>{e.stopPropagation();showModal('Delete Tab',`<form><p>All data will be erased for "${tab}". Are you sure?</p><button type="submit">Yes</button><button type="button" onclick="document.getElementById('modalOverlay').style.display='none'">Cancel</button></form>`,()=>{delete allTabs[tab];saveTabs();if(currentTab===tab) currentTab='Dashboard';render();});};
+    btn.appendChild(close);nav.appendChild(btn);
+  });
+  const plus=document.createElement('button');plus.className='plus-tab';plus.textContent='+';
+  plus.onclick=()=>showModal('New Tab',`
+    <form>
+      <div class="form-group"><input name="tabName" required><label>Tab name</label></div>
+      <div class="form-group"><input name="topic" required><label>Topic name</label></div>
+      <div class="form-group"><input type="number" name="days" min="1" required><label>Total days</label></div>
+      <div class="form-group"><input type="date" name="startDate" required><label>Start date</label></div>
+      <button type="submit">Create</button>
+    </form>`,fd=>{
+    const n=fd.get('tabName');if(allTabs[n])return alert('Exists');allTabs[n]=createTrackerData(fd);currentTab=n;saveTabs();render();
+  });
+  nav.appendChild(plus);
+}
+
+function renderDashboard(){
+  const c=document.getElementById('content');c.innerHTML='<div class="dashboard-grid"></div>';
+  const grid=c.querySelector('.dashboard-grid');
+  Object.keys(allTabs).forEach((tab,i)=>{
+    if(tab==='Dashboard'||!allTabs[tab])return;
+    const tr=allTabs[tab],total=tr.weeks.flat().length,done=tr.weeks.flat().filter(d=>d.checked).length;
+    const pct=Math.round(done/total*100);
+    const card=document.createElement('div');card.className='dashboard-card';
+    card.innerHTML=`<h3>${tab}</h3><p>${tr.topic}</p>
+    <div class="card-progress"><div class="card-progress-bar" style="width:${pct}%"></div></div>
+    <small>${pct}%</small>
+    <canvas id="pie-${i}" height="100"></canvas>
+    <canvas id="bar-${i}" height="100"></canvas>
+    <div class="card-buttons"><button class="open-btn" onclick="openTab('${tab}')">Open</button><button class="reset-btn" onclick="resetTracker('${tab}')">Reset</button></div>`;
+    grid.appendChild(card);
+    setTimeout(()=>{
+      const pctx=document.getElementById(`pie-${i}`).getContext('2d');
+      new Chart(pctx,{type:'pie',data:{labels:['Done','Remaining'],datasets:[{data:[done,total-done],backgroundColor:['#10b981','#ef4444']}]},options:{plugins:{legend:{labels:{color:'white'}}}}});
+      const wb=tr.weeks.map(w=>Math.round(w.filter(d=>d.checked).length/w.length*100));
+      const bctx=document.getElementById(`bar-${i}`).getContext('2d');
+      new Chart(bctx,{type:'bar',data:{labels:wb.map((_,idx)=>`W${idx+1}`),datasets:[{label:'%',data:wb,backgroundColor:'#fff'}]},options:{scales:{x:{ticks:{color:'white'}},y:{ticks:{color:'white'}}},plugins:{legend:{display:false}}}});
+    },50);
+  });
+}
+
+function openTab(tab){currentTab=tab;saveTabs();render();}
+
+function resetTracker(tab){
+  showModal('Reset Tracker',`<form><p>All data for "${tab}" will be erased. Continue?</p><button type="submit">Yes</button><button type="button" onclick="document.getElementById('modalOverlay').style.display='none'">Cancel</button></form>`,
+  ()=>{delete allTabs[tab];saveTabs();render();});
+}
+
+function renderTracker(){
+  const tr=allTabs[currentTab];
+  const c=document.getElementById('content');c.innerHTML='';
+  tr.weeks.forEach((week,wi)=>{
+    const title=document.createElement('div');title.className='week-title';title.textContent=`Week ${wi+1} – ${tr.topic}`;c.appendChild(title);
+    const done=week.filter(d=>d.checked).length,tot=week.length;
+    const pc=document.createElement('div');pc.className='progress-container';
+    const pb=document.createElement('div');pb.className='progress-bar';pb.style.width=`${Math.round(done/tot*100)}%`;pc.appendChild(pb);c.appendChild(pc);
+    week.forEach(day=>{
+      const label=document.createElement('label');label.className='checkbox';
+      const cb=document.createElement('input');cb.type='checkbox';cb.checked=day.checked;
+      cb.onchange=()=>{
+        day.checked=cb.checked;
+        saveTabs();
+        checkCelebrations(tr);
+        render();
+      };
+      const mark=document.createElement('span');
+      mark.className='checkmark';
+      mark.innerHTML='<svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+      label.append(cb,mark,document.createTextNode(day.label));
+      c.appendChild(label);
+    });
+  });
+}
+
+// Export / Import
+function exportData(){
+  const blob=new Blob([JSON.stringify({allTabs,completedWeeks,completedTabs})],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;a.download='day-tracker-data.json';a.click();
+  URL.revokeObjectURL(url);
+}
+function importData(){
+  const inp=document.createElement('input');
+  inp.type='file';
+  inp.accept='.json';
+  inp.onchange=()=>{
+    const file=inp.files[0];
+    if(!file) return;
+    const reader=new FileReader();
+    reader.onload=()=>{
+      try{
+        const data=JSON.parse(reader.result);
+        if(data.allTabs) allTabs=data.allTabs;
+        if(data.completedWeeks) completedWeeks=data.completedWeeks;
+        if(data.completedTabs) completedTabs=data.completedTabs;
+        saveTabs();
+        render();
+      }catch(e){alert('Invalid file');}
+    };
+    reader.readAsText(file);
+  };
+  inp.click();
+}
+
+// Main render
+function render(){
+  renderTabs();
+  if(currentTab==='Dashboard'){
+    document.getElementById('resetBtn').style.display='none';
+    renderDashboard();
+  } else {
+    document.getElementById('resetBtn').style.display='inline-block';
+    document.getElementById('resetBtn').onclick=()=>resetTracker(currentTab);
+    renderTracker();
+  }
+}
+
+// Start app
+render();
+</script>
+</body>
+</html>
