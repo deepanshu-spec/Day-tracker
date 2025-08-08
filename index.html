@@ -552,6 +552,32 @@ if ("serviceWorker" in navigator) {
 </div>
 </div>  <div class="celebration-popup" id="celebrationPopup"></div>  <script>  
 
+
+function updateDashboardMessageColors() {
+  const container = document.querySelector('#content > div');
+  if (!container) return;
+  
+  const isDark = document.body.classList.contains('dark');
+  container.style.color = isDark ? 'var(--text-dark)' : 'var(--text-light)';
+  
+  const btn = container.querySelector('button');
+  if (btn) {
+    btn.style.background = 'var(--primary)';
+    btn.style.color = 'white';
+    btn.style.border = 'none';
+    btn.style.padding = '0.4rem 1rem';
+    btn.style.borderRadius = '8px';
+    btn.style.cursor = 'pointer';
+  }
+}
+  
+  
+
+
+
+
+
+
 document.querySelectorAll('.dashboard-card').forEach((card, index) => {  
   card.style.setProperty('--i', index);  
 });  
@@ -574,9 +600,14 @@ function saveTabs() {
 function toggleDarkMode() {  
   document.body.classList.toggle('dark');  
   const isDark = document.body.classList.contains('dark');  
-  localStorage.setItem('darkMode', isDark);  
+  localStorage.setItem('darkMode', isDark);  localStorage.setItem('darkMode', document.body.classList.contains('dark'));
+  updateDashboardMessageColors();
   updateThemeToggleLabel();  
 }  
+  
+  
+  
+  
   
 function updateThemeToggleLabel() {  
   const label = document.getElementById('themeToggleLabel');  
@@ -663,6 +694,16 @@ function checkCelebrations(data) {
       saveTabs();    
     }    
   });    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
       
   // Check entire tab completion    
   const allComplete = data.weeks.every(w => w.every(d => d.checked));    
@@ -734,68 +775,36 @@ function renderDashboard() {
   const c = document.getElementById('content');
   c.innerHTML = '';
   
-  // Get all tab names except Dashboard
-  const tabNames = Object.keys(allTabs).filter(tab => tab !== 'Dashboard');
-  
-  if (tabNames.length === 0) {
-    // Show message and a button to add new tab
-    const container = document.createElement('div');
-    container.style.textAlign = 'center';
-    container.style.marginTop = '3rem';
-    container.style.color = 'var(--text-light)';
-    if (document.body.classList.contains('dark')) {
-      container.style.color = 'var(--text-dark)';
-    }
-    
-    const msg = document.createElement('p');
-    msg.textContent = 'Add new tabs to track days';
-    msg.style.fontSize = '1.2rem';
-    msg.style.marginBottom = '1.5rem';
-    container.appendChild(msg);
-    
+  // Filter tabs excluding Dashboard and ensure they exist
+  const tabs = Object.keys(allTabs).filter(t => t !== 'Dashboard' && allTabs[t]);
+  if (tabs.length === 0) {
+    // Show message + button to add new tab
+    const div = document.createElement('div');
+    div.style.textAlign = 'center';
+    div.style.marginTop = '3rem';
+    div.innerHTML = `<p>Add new tabs to track days</p>`;
     const btn = document.createElement('button');
     btn.textContent = '+ Add New Tab';
-    btn.style.background = 'var(--primary)';
-    btn.style.color = 'white';
-    btn.style.border = 'none';
-    btn.style.padding = '0.7rem 1.5rem';
-    btn.style.fontSize = '1rem';
-    btn.style.borderRadius = '8px';
-    btn.style.cursor = 'pointer';
     btn.onclick = () => {
-      // Trigger your existing modal for new tab creation
-      document.getElementById('modalOverlay').style.display = 'flex';
-      showModal('New Tab', `
-        <form>
-          <div class="form-group"><input name="tabName" required><label>Tab name</label></div>
-          <div class="form-group"><input name="topic" required><label>Topic name</label></div>
-          <div class="form-group"><input type="number" name="days" min="1" required><label>Total days</label></div>
-          <div class="form-group"><input type="date" name="startDate" required><label>Start date</label></div>
-          <button type="submit">Create</button>
-        </form>`, fd => {
-        const n = fd.get('tabName');
-        if (allTabs[n]) return alert('Tab name already exists!');
-        allTabs[n] = createTrackerData(fd);
-        currentTab = n;
-        saveTabs();
-        render();
-        document.getElementById('modalOverlay').style.display = 'none';
-      });
+      document.querySelector('.plus-tab').click(); // trigger plus tab button
     };
-    container.appendChild(btn);
-    c.appendChild(container);
-    return; // stop here, no dashboard cards
+    div.appendChild(btn);
+    c.appendChild(div);
+    
+    // Update colors based on dark/light mode
+    updateDashboardMessageColors();
+    return;
   }
   
-  // Otherwise, render dashboard cards as before
+  // Normal dashboard grid render
   c.innerHTML = '<div class="dashboard-grid"></div>';
   const grid = c.querySelector('.dashboard-grid');
-  tabNames.forEach((tab, i) => {
+  
+  tabs.forEach((tab, i) => {
     const tr = allTabs[tab],
       total = tr.weeks.flat().length,
-      done = tr.weeks.flat().filter(d => d.checked).length,
-      pct = Math.round(done / total * 100);
-    
+      done = tr.weeks.flat().filter(d => d.checked).length;
+    const pct = Math.round(done / total * 100);
     const card = document.createElement('div');
     card.className = 'dashboard-card';
     card.innerHTML = `
@@ -810,7 +819,8 @@ function renderDashboard() {
       <div class="card-buttons">
         <button class="open-btn" onclick="openTab('${tab}')">Open</button>
         <button class="reset-btn" onclick="resetTracker('${tab}')">Reset</button>
-      </div>`;
+      </div>
+    `;
     grid.appendChild(card);
     
     setTimeout(() => {
@@ -819,18 +829,37 @@ function renderDashboard() {
         type: 'pie',
         data: {
           labels: ['Done', 'Remaining'],
-          datasets: [{ data: [done, total - done], backgroundColor: ['#10b981', '#ef4444'] }]
+          datasets: [{
+            data: [done, total - done],
+            backgroundColor: ['#10b981', '#ef4444']
+          }]
         },
-        options: { plugins: { legend: { labels: { color: 'white' } } } }
+        options: {
+          plugins: {
+            legend: {
+              labels: { color: 'white' }
+            }
+          }
+        }
       });
       
       const wb = tr.weeks.map(w => Math.round(w.filter(d => d.checked).length / w.length * 100));
       const bctx = document.getElementById(`bar-${i}`).getContext('2d');
       new Chart(bctx, {
         type: 'bar',
-        data: { labels: wb.map((_, idx) => `W${idx + 1}`), datasets: [{ label: '%', data: wb, backgroundColor: '#fff' }] },
+        data: {
+          labels: wb.map((_, idx) => `W${idx + 1}`),
+          datasets: [{
+            label: '%',
+            data: wb,
+            backgroundColor: '#fff'
+          }]
+        },
         options: {
-          scales: { x: { ticks: { color: 'white' } }, y: { ticks: { color: 'white' } } },
+          scales: {
+            x: { ticks: { color: 'white' } },
+            y: { ticks: { color: 'white' } }
+          },
           plugins: { legend: { display: false } }
         }
       });
