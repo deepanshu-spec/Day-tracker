@@ -99,7 +99,7 @@ padding: 0.68rem 0.7rem;
 border: none;
 background: none;
 border-radius: 1px;
-border-right:0.21px solid #72727291;
+border-right:0.2px solid #72727291;
 border-left:1px solid #72727291;
 cursor: pointer;
 margin-left: 0.2px;
@@ -730,35 +730,113 @@ function renderTabs(){
   
 }    
     
-function renderDashboard(){    
-  const c=document.getElementById('content');c.innerHTML='<div class="dashboard-grid"></div>';    
-  const grid=c.querySelector('.dashboard-grid');    
-  Object.keys(allTabs).forEach((tab,i)=>{    
-    if(tab==='Dashboard'||!allTabs[tab])return;    
-    const tr=allTabs[tab],total=tr.weeks.flat().length,done=tr.weeks.flat().filter(d=>d.checked).length;    
-    const pct=Math.round(done/total*100);    
-    const card=document.createElement('div');card.className='dashboard-card';    
-card.innerHTML = `  
-  <h3>${tab}</h3><p>${tr.topic}</p>  
-  <div class="card-progress"><div class="card-progress-bar" style="width:${pct}%"></div></div>  
-  <small>${done}/${total}days</small>  
-  <canvas id="pie-${i}" height="100"></canvas>  
-  <canvas id="bar-${i}" height="100"></canvas>  
-  <div class="card-buttons">  
-    <button class="open-btn" onclick="openTab('${tab}')">Open</button>  
-    <button class="reset-btn" onclick="resetTracker('${tab}')">Reset</button>  
-  </div>  
-`;  
-    grid.appendChild(card);    
-    setTimeout(()=>{    
-      const pctx=document.getElementById(`pie-${i}`).getContext('2d');    
-      new Chart(pctx,{type:'pie',data:{labels:['Done','Remaining'],datasets:[{data:[done,total-done],backgroundColor:['#10b981','#ef4444']}]},options:{plugins:{legend:{labels:{color:'white'}}}}});    
-      const wb=tr.weeks.map(w=>Math.round(w.filter(d=>d.checked).length/w.length*100));    
-      const bctx=document.getElementById(`bar-${i}`).getContext('2d');    
-      new Chart(bctx,{type:'bar',data:{labels:wb.map((_,idx)=>`W${idx+1}`),datasets:[{label:'%',data:wb,backgroundColor:'#FFC1B7'}]},options:{scales:{x:{ticks:{color:'white'}},y:{ticks:{color:'white'}}},plugins:{legend:{display:false}}}});    
-    },50);    
-  });    
-}    
+function renderDashboard() {
+  const c = document.getElementById('content');
+  c.innerHTML = '';
+  
+  // Get all tab names except Dashboard
+  const tabNames = Object.keys(allTabs).filter(tab => tab !== 'Dashboard');
+  
+  if (tabNames.length === 0) {
+    // Show message and a button to add new tab
+    const container = document.createElement('div');
+    container.style.textAlign = 'center';
+    container.style.marginTop = '3rem';
+    container.style.color = 'var(--text-light)';
+    if (document.body.classList.contains('dark')) {
+      container.style.color = 'var(--text-dark)';
+    }
+    
+    const msg = document.createElement('p');
+    msg.textContent = 'Add new tabs to track days';
+    msg.style.fontSize = '1.2rem';
+    msg.style.marginBottom = '1.5rem';
+    container.appendChild(msg);
+    
+    const btn = document.createElement('button');
+    btn.textContent = '+ Add New Tab';
+    btn.style.background = 'var(--primary)';
+    btn.style.color = 'white';
+    btn.style.border = 'none';
+    btn.style.padding = '0.7rem 1.5rem';
+    btn.style.fontSize = '1rem';
+    btn.style.borderRadius = '8px';
+    btn.style.cursor = 'pointer';
+    btn.onclick = () => {
+      // Trigger your existing modal for new tab creation
+      document.getElementById('modalOverlay').style.display = 'flex';
+      showModal('New Tab', `
+        <form>
+          <div class="form-group"><input name="tabName" required><label>Tab name</label></div>
+          <div class="form-group"><input name="topic" required><label>Topic name</label></div>
+          <div class="form-group"><input type="number" name="days" min="1" required><label>Total days</label></div>
+          <div class="form-group"><input type="date" name="startDate" required><label>Start date</label></div>
+          <button type="submit">Create</button>
+        </form>`, fd => {
+        const n = fd.get('tabName');
+        if (allTabs[n]) return alert('Tab name already exists!');
+        allTabs[n] = createTrackerData(fd);
+        currentTab = n;
+        saveTabs();
+        render();
+        document.getElementById('modalOverlay').style.display = 'none';
+      });
+    };
+    container.appendChild(btn);
+    c.appendChild(container);
+    return; // stop here, no dashboard cards
+  }
+  
+  // Otherwise, render dashboard cards as before
+  c.innerHTML = '<div class="dashboard-grid"></div>';
+  const grid = c.querySelector('.dashboard-grid');
+  tabNames.forEach((tab, i) => {
+    const tr = allTabs[tab],
+      total = tr.weeks.flat().length,
+      done = tr.weeks.flat().filter(d => d.checked).length,
+      pct = Math.round(done / total * 100);
+    
+    const card = document.createElement('div');
+    card.className = 'dashboard-card';
+    card.innerHTML = `
+      <h3>${tab}</h3>
+      <p>${tr.topic}</p>
+      <div class="card-progress">
+        <div class="card-progress-bar" style="width:${pct}%"></div>
+      </div>
+      <small>${pct}%</small>
+      <canvas id="pie-${i}" height="100"></canvas>
+      <canvas id="bar-${i}" height="100"></canvas>
+      <div class="card-buttons">
+        <button class="open-btn" onclick="openTab('${tab}')">Open</button>
+        <button class="reset-btn" onclick="resetTracker('${tab}')">Reset</button>
+      </div>`;
+    grid.appendChild(card);
+    
+    setTimeout(() => {
+      const pctx = document.getElementById(`pie-${i}`).getContext('2d');
+      new Chart(pctx, {
+        type: 'pie',
+        data: {
+          labels: ['Done', 'Remaining'],
+          datasets: [{ data: [done, total - done], backgroundColor: ['#10b981', '#ef4444'] }]
+        },
+        options: { plugins: { legend: { labels: { color: 'white' } } } }
+      });
+      
+      const wb = tr.weeks.map(w => Math.round(w.filter(d => d.checked).length / w.length * 100));
+      const bctx = document.getElementById(`bar-${i}`).getContext('2d');
+      new Chart(bctx, {
+        type: 'bar',
+        data: { labels: wb.map((_, idx) => `W${idx + 1}`), datasets: [{ label: '%', data: wb, backgroundColor: '#fff' }] },
+        options: {
+          scales: { x: { ticks: { color: 'white' } }, y: { ticks: { color: 'white' } } },
+          plugins: { legend: { display: false } }
+        }
+      });
+    }, 50);
+  });
+}
     
 function openTab(tab){currentTab=tab;saveTabs();render();}    
     
