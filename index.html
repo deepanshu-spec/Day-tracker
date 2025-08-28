@@ -1,560 +1,2661 @@
+<!DOCTYPE html>
+<html lang="en">
 
-<!DOCTYPE html>  <html lang="en">  
-<head>  
-<meta charset="UTF-8" />  
-<meta name="viewport" content="width=device-width, initial-scale=1" />  
-<title>Day Tracker Pro</title>  
-<link rel="manifest" href="manifest.json" />  
-<meta name="theme-color" content="#2563eb" />  
-<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">  
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>  
-<style> 
-
-:root {  
-  --primary: #FF9713;  
-  --bg-light: #BCBCBC;  
-  --bg-dark: #1f2937;  
-  --text-light: #1f2937;  
-  --text-dark: #f9fafb;  
-  --overlay: rgba(0,0,0,0.6);  
-  --card1:linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
-  --card2: linear-gradient(135deg, #FFC123 0%, #ff5e62 100%);
-  --card3:linear-gradient(125deg, #56ab2f 0%, #a8e063 100%);
-  --card4:linear-gradient(135deg, #da22ff 0%, #979DFC 100%);
-  --card5: linear-gradient(15deg, #43cea2 0%, #185a9d 100%);  
-}  
-:root {
-  --text-primary: #222;
-  --text-secondary: #555;
-  --background: #fff;
-  --separator-color: #999;
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Day Tracker Pro</title>
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#2563eb" />
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root {
+      --primary: linear-gradient(90deg, #4C81FF, #7165FF);
+      --bg-light: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      ;
+      --bg-dark: #1F2937;
+      --text-light: #1B1C1D;
+      --text-dark: #f9fafb;
+      --overlay: rgba(0, 0, 0, 0.6);
+      --card1: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+      --card2: linear-gradient(135deg, #FFC123 0%, #ff5e62 100%);
+      --card3: linear-gradient(125deg, #56ab2f 0%, #a8e063 100%);
+      --card4: linear-gradient(135deg, #da22ff 0%, #979DFC 100%);
+      --card5: linear-gradient(15deg, #43cea2 0%, #185a9d 100%);
+    }
+    
+    :root {
+      --text-primary: #222;
+      --text-secondary: #555;
+      --background: #fff;
+      --separator-color: #999;
+    }
+    
+    body.dark {
+      --primary: linear-gradient(90deg, #1e3c72, #2a5298);
+      --text-primary: #eee;
+      --text-secondary: #bbb;
+      --background: #121212;
+      --separator-color: #ACACAC;
+      --card1: linear-gradient(145deg, #1a1a1a, #2d1b4e);
+      --card2: linear-gradient(160deg, #0f2027, #203a43, #2c5364);
+      --card3: linear-gradient(135deg, #0f2027, #1a2f1f, #203a43);
+      --card4: linear-gradient(145deg, #1b0a0a, #3a1a1a);
+      --card5: linear-gradient(135deg, #1e1e2f, #3b1f52);
+      
+    }
+    
+    /* Use variables in your CSS */
+    body {
+      
+      height: 100vh;
+      /* fill screen */
+      display: flex;
+      flex-direction: column;
+      margin: 0;
+      justify-content: center;
+      align-items: center;
+      font-family: "Poppins", sans-serif;
+      background: ;
+      color: var(--text-light);
+      padding: 0;
+      transition: background 0.3s, color 0.3s;
+    }
+    
+    #mainbodycontainer {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      width: 98vw;
+      height: 92vh;
+      position: relative;
+      top: 1px;
+      /*flex: 1 1 auto;         /* take remaining height */
+      overflow-y: auto;
+      /* vertical scroll only */
+      overflow-x: hidden;
+      border-radius: 20px;
+      backdrop-filter: blur(15px) saturate(180%);
+      -webkit-backdrop-filter: blur(15px) saturate(180%);
+      border: 1px solid rgba(140, 140, 140, 0.24);
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+      
+      text-align: center;
+      
+      
+    }
+    
+    /* Glassmorphism card */
+    
+    
+    /* Chrome, Edge, Safari */
+    /*::-webkit-scrollbar {
+  width: 12px;
+  background: transparent; /* invisible when not hovered 
 }
 
-body.dark {
-  --primary: #685DE7; 
-  --text-primary: #eee;
-  --text-secondary: #bbb;
-  --background: #121212;
-  --separator-color: #ACACAC;
- --card1:linear-gradient(145deg, #1a1a1a, #2d1b4e);
-  --card2: linear-gradient(160deg, #0f2027, #203a43, #2c5364);
-  --card3:linear-gradient(135deg, #0f2027, #1a2f1f, #203a43);
-  --card4:linear-gradient(145deg, #1b0a0a, #3a1a1a);
-  --card5:linear-gradient(135deg, #1e1e2f, #3b1f52);
-
+::-webkit-scrollbar-track {
+  background: transparent; 
 }
 
-/* Use variables in your CSS */
-body {
-  background-color: var(--background);
-  color: var(--text-primary);
+::-webkit-scrollbar-thumb {
+  background: rgba(25, 108, 190, 0.56);
+  backdrop-filter: blur(12px) saturate(180%);
+-webkit-backdrop-filter: blur(12px) saturate(180%);
+border: 1px solid rgba(255, 255, 255, 0.2);
+box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.2);
+  border-radius: 22px;
+  transition: all 0.3s ease;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-body {  
-  margin: 0;  
-  font-family: system-ui, sans-serif;  
-  background: var(--bg-light);  
-  color: var(--text-light);  
-  transition: background 0.3s, color 0.3s;  
-
-}  
-body.dark {  
-  background: var(--bg-dark);  
-  color: var(--text-dark);  
-}  
-header {  
-  background: var(--primary);  
-  color: white;  
-  padding: 0.8rem 1rem;  
-  display: flex;  
-  justify-content: space-between;  
-  align-items: center;  
-}  
-header h1 { margin: 0; font-size: 1.2rem; }  
-header .actions button {  
-  background: none;  
-  border: none;  
-  color: white;  
-  cursor: pointer;  
-}  
-nav {  display: flex;
-overflow-x: auto;
-background: white;
-}
-body.dark nav { background: #374151; }
-nav .tab-btn {
-padding: 0.68rem 0.7rem;
-border: none;
-background: none;
-border-radius: 1px;
-border-right:0.2px solid #72727291;
-border-left:1px solid #72727291;
-cursor: pointer;
-margin-left: 0.2px;
-}
-body.dark nav .tab-btn { color: white;border-right:1px solid #5A5A5A;border-left:1px solid #72727291; }
-nav .tab-btn.active {
-background: var(--primary);
-color: white;
-}
-.tab-close {
-  margin-left: 30px;
-  cursor: pointer;
-  font-size: 1.2rem;
+*/
+    /* Show scrollbar only on hover */
+    /*.mainbodycontainer:hover::-webkit-scrollbar-thumb {
   
-  color: #000000;
-}
-body.dark .tab-close {
-margin-left: 30px;
-cursor: pointer;
-font-size:1.2rem;
-
-color: #D1FF00;
+  backdrop-filter: blur(12px) saturate(180%);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.2);
 }
 
-.actions {
-display: flex;
-gap: 2rem;
-align-items: center;
+.mainbodycontainer:hover::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, rgba(102,126,234,0.6), rgba(118, 75, 162, 1));
+  border: 2px solid rgba(255, 255, 255, 0.3);
+}*/
+    
+    /* Firefox (auto-hide + glassy colors) */
+    * {
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255, 105, 105, 1) rgba(177, 51, 51, 1);
+    }
+    
+    
+    
+    
+    
+    
+    body.dark {
+      background: var(--bg-dark);
+      color: var(--text-dark);
+    }
+    
+    .navcontainer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-direction: column;
+      position: fixed;
+      gap: 0;
+      
+      
+      flex: 0 0 auto;
+      /* don't grow or shrink */
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--primary, #1e3a8a);
+      color: white;
+      padding: 0rem 0rem;
+    }
+    
+    
+    
+    
+    
+    
+    /* Navbar stays at top */
+    /*header.navcontainer {
+  
 }
-
-.action-btn {
-display: flex;
-flex-direction: column;
-align-items: center;
-cursor: pointer;
-color: white;
-position: relative;
+*/
+    /* Scrollable main area */
+    /*.mainbodycontainer {
+  
 }
-
-.action-btn small {
-font-size: 0.7rem;
-margin-top: 2px;
-opacity: 0.9;
-
-/* Fix left margin or spacing /
+*/
+    /* Content inside main */
+    #content {
+      background: ;
+      width: 93%;
+      /* optional, center content */
+      position: absolute;
+      
+      top: 0;
+      margin: 0;
+    
+      overflow-x: hidden;
+      padding:;
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    header {
+      background: var(--primary);
+      color: white;
+      padding: 0.8rem 0rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 0;
+      width: 100vw;
+      overflow: hidden;
+      
+    }
+    
+    header h1 {
+      margin: 0;
+      margin-left: 3px;
+      font-size: 1.2rem;
+    }
+    
+    header .actions button {
+      background: none;
+      border: none;
+      color: white;
+      cursor: pointer;
+    }
+    
+    nav {
+      display: flex;
+      align-items: flex-start;
+      justify-content: ;
+      overflow-x: auto;
+      overflow-y: hidden;
+      /* prevents vertical scrollbar stub */
+      scrollbar-width: none;
+      /* Firefox */
+      background: ;
+      gap: 5px;
+      margin: 0;
+      height: cover;
+      border-radius: 12px;
+      font-size: 0;
+      background: #FFFFFF;
+      border: none;
+      box-shadow:
+        inset 10px 0 10px -5px rgba(140, 140, 140, 0.4),
+        /* Left side shadow */
+        inset -10px 0 10px -5px rgba(89, 89, 89, 0.4);
+      /* Right side shadow */
+    }
+    
+    
+    nav::-webkit-scrollbar {
+      display: none;
+      /* Chrome/Safari */
+    }
+    
+    body.dark nav {
+      background: var(--bg-dark);
+      box-shadow:
+        inset 8px 0 12px -6px rgba(142, 142, 142, 0.19),
+        /* Left inner glow */
+        inset -8px 0 12px -6px rgba(157, 157, 157, 0.18);
+      /* Right inner glow */
+    }
+    
+    
+    .dashboardbtn {
+      line-height: 1;
+      padding: 0.65rem 1rem;
+      background: transparent;
+      border: none;
+      border: 2px solid #FFFFFF;
+      border-radius: 10px;
+      cursor: pointer;
+      margin-bottom: 2px;
+      margin-right: 2px;
+      color: white;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.25s ease;
+    }
+    
+    body.dark .dashboardbtn {
+      border: 2px solid #FFFFFF;
+      
+    }
+    
+    
+    /* --- Tabs --- */
+    nav .tab-btn {
+      
+      line-height: 1;
+      padding: 0.65rem 0.5rem;
+      background: transparent;
+      border: none;
+      border: 1px solid rgba(165, 165, 165, 1);
+      cursor: pointer;
+      margin: 2px;
+      border-radius: 7px 7px 7px 7px;
+      margin-right: 0;
+      color: white;
+      font-size: 14px;
+      font-weight: 500;
+      
+      
+      display: flex;
+      justify-content: space-evenly;
+      align-items: center;
+      
+      
+      
+      transition: all 0.15s ease;
+      /* smooth hover + active */
+      
+      
+      
+    }
+    
+    /* Light mode text color */
+    body:not(.dark) nav .tab-btn {
+      color: #000000;
+      background: ;
+      box-shadow: inset 8px 0 12px -6px rgba(217, 217, 217, 0.59),
+        inset -8px 0 12px -6px rgba(189, 189, 189, 0.6);
+      /* Right inner glow */
+      cursor: pointer;
+      box-shadow: 2px 2px 12px lightgrey;
+      border: 1px solid rgba(75, 75, 75, 1);
+    }
+    
+    /* Hover effect */
+    nav .tab-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      /* golden glow underline */
+    }
+    
+    /* Active tab */
+    body:not(.dark) nav .tab-btn.active {
+      background: #FFFFFF;
+      color: black;
+      /* merge with nav */
+      /*border-radius:12px 12px 0 0;*/
+      box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.2);
+      z-index: 2;
+      border: 2px solid rgba(0, 0, 0, 1);
+    }
+    
+    /* Dark mode active tab */
+    body.dark nav .tab-btn.active {
+      
+      /*  border-radius:6px 6px 0 0;*/
+      color: white;
+      border: 3px solid rgba(255, 255, 255, 1);
+      
+      backdrop-filter: blur(15px) saturate(180%);
+      -webkit-backdrop-filter: blur(15px) saturate(180%);
+      
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+      
+    }
+    
+    /* Tab close button */
+    .tab-close {
+      margin-left: 12px;
+      cursor: pointer;
+      font-size: 1rem;
+      color: #000000;
+      transition: color 0.25s ease;
+    }
+    
+    body.dark .tab-close {
+      color: #D1FF00;
+    }
+    
+    .tab-close:hover {
+      color: red;
+    }
+    
+    .actions {
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+      margin-right: 1rem;
+    }
+    
+    .action-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+      color: white;
+      position: relative;
+    }
+    
+    .action-btn small {
+      font-size: 0.7rem;
+      margin-top: 2px;
+      opacity: 0.9;
+      
+      /* Fix left margin or spacing /
 margin-left: 0;
 padding-left: 0;
 text-align: center;
 display: block; / make sure small acts like a block and centers properly */
-width: 100%;
+      width: 100%;
+    }
+    
+    /* Hover tooltip */
+    .action-btn::after {
+      content: attr(title);
+      position: absolute;
+      
+      bottom: -1rem;
+      background: rgba(0, 0, 0, 0.8);
+      color: white;
+      padding: 3px 2px;
+      border-radius: 4px;
+      font-size: 0.7rem;
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
+    
+    .action-btn:hover::after {
+      opacity: 1;
+    }
+    
+    .plus-tab {
+      font-weight: bold;
+    }
+    
+    main {
+      padding: 1rem;
+      background: ;
+      
+      
+    }
+    
+    .dashboardheading {
+      color: black;
+      
+      
+    }
+    
+    body.dark .dashboardheading {
+      color: white;
+      
+    }
+    
+    /* Dashboard */
+    .dashboard-grid {
+      display: grid;
+      gap: 1rem;
+      border-radius: 10px;
+      border: ;
+      background: ;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      padding: 1rem;
+    }
+    
+    .tooltip {
+      position: relative;
+      display: inline-block;
+    }
+    
+    .tooltip .tooltip-text {
+      visibility: hidden;
+      width: max-content;
+      max-width: 200px;
+      background: rgba(0, 0, 0, 0.75);
+      color: #fff;
+      text-align: center;
+      border-radius: 6px;
+      padding: 5px 8px;
+      position: absolute;
+      z-index: 1000;
+      bottom: 125%;
+      /* show above element */
+      left: 50%;
+      transform: translateX(-50%);
+      opacity: 0;
+      transition: opacity 0.3s ease-in-out;
+      font-size: 0.75rem;
+      pointer-events: none;
+    }
+    
+    .tooltip:hover .tooltip-text {
+      visibility: visible;
+      opacity: 1;
+    }
+    
+    
+    
+    
+    
+    .dashboard-card {
+      border-radius: 12px;
+      padding: 1rem;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      /* 🔥 Smooth hover */
+      animation: cardEnter 0.5s ease forwards;
+      opacity: 0;
+      transform: translateY(50px);
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    /* Hover effect */
+    .dashboard-card:hover {
+      transform: scale(1.93);
+      /* Slight scale up */
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.25);
+    }
+    
+    
+    
+    @keyframes cardEnter {
+      0% {
+        opacity: 0;
+        transform: translateY(50px);
+      }
+      
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    
+    
+    
+    /* Colors repeat every 5 cards */
+    .dashboard-card:nth-child(5n + 1) {
+      background: var(--card1);
+    }
+    
+    .dashboard-card:nth-child(5n + 2) {
+      background: var(--card2);
+    }
+    
+    .dashboard-card:nth-child(5n + 3) {
+      background: var(--card3);
+    }
+    
+    .dashboard-card:nth-child(5n + 4) {
+      background: var(--card4);
+    }
+    
+    .dashboard-card:nth-child(5n + 5) {
+      background: var(--card5);
+    }
+    
+    /* Stagger delays for wave effect */
+    
+    /* Slide + fade in animation */
+    
+    
+    .card-progress {
+      width: 100%;
+      background: #eee;
+      height: 8px;
+      border-radius: 4px;
+      overflow: hidden;
+      margin: 0.5rem 0;
+    }
+    
+    .card-progress-bar {
+      height: 100%;
+      background: #20966F;
+      /* green */
+      transition: width 0.3s ease;
+    }
+    
+    /* Tracker */
+    .progress-container {
+      background: #ddd;
+      border-radius: 10px;
+      overflow: hidden;
+      height: 10px;
+      margin: 0.5rem 0;
+    }
+    
+    .progress-bar {
+      background: var(--primary);
+      height: 100%;
+      width: 0;
+      border-radius: 2px;
+      transition: width 0.5s ease-in-out;
+    }
+    
+    .week-title {
+      font-weight: bold;
+      margin-top: 1rem;
+    }
+    
+    /* ✅ Unified Checkbox Style (for both day + task) */
+    label.checkbox,
+    .day-checkbox {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: #EFEFEF;
+      padding: 0.9rem 0.6rem;
+      border-radius: 12px;
+      cursor: pointer;
+      margin-bottom: 0.5rem;
+      flex-grow: 1;
+    }
+    
+    body.dark label.checkbox,
+    body.dark .day-checkbox {
+      background: #374151;
+    }
+    
+    /* Hide native checkbox */
+    input[type="checkbox"] {
+      display: none;
+    }
+    
+    /* Custom Checkmark Box */
+    .checkmark,
+    .day-checkmark {
+      width: 22px;
+      height: 22px;
+      background: #FFFFFF;
+      border: 2px solid #999;
+      border-radius: 6px;
+      position: relative;
+      transition: all 0.3s ease;
+      flex-shrink: 0;
+    }
+    
+    /* Checked state */
+    input:checked+.checkmark,
+    input:checked+.day-checkmark {
+      background: var(--primary, #007bff);
+      border-color: var(--primary, #007bff);
+      animation: pop 0.3s ease;
+    }
+    
+    /* Tick mark */
+    .checkmark::after,
+    .day-checkmark::after {
+      content: "";
+      position: absolute;
+      top: 3px;
+      left: 6px;
+      width: 5px;
+      height: 10px;
+      border: solid #fff;
+      border-width: 0 2px 2px 0;
+      opacity: 0;
+      transform: rotate(45deg);
+      transition: opacity 0.2s;
+    }
+    
+    input:checked+.checkmark::after,
+    input:checked+.day-checkmark::after {
+      opacity: 1;
+    }
+    
+    /* ✅ Pop animation */
+    @keyframes pop {
+      50% {
+        transform: scale(1.2);
+      }
+    }
+
+    
+    /* Fraction for days */
+    .day-fraction {
+      font-size: 0.9rem;
+      color: #000000;
+      
+    }
+    
+    body.dark .day-fraction {
+      color: white;
+    }
+    
+    /* Modal with Floating Labels */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: var(--overlay);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+    }
+    
+    .modal {
+      background: #EDEAD8;
+      border-radius: 12px;
+      padding: 1rem;
+      width: 90%;
+      max-width: 400px;
+      text-align: center;
+    }
+    
+    body.dark .modal {
+      background: linear-gradient(195deg, #181818, #000000);
+      color: white;
+    }
+    
+    .modal h2 {
+      margin-top: 0;
+    }
+    
+    .form-group {
+      position: relative;
+      margin-top: 1.5rem;
+    }
+    
+    .modal input {
+      
+      width: 96%;
+      padding: 10px 10px 10px 5px;
+      border: none;
+      border-bottom: 2px solid #7E7C7C;
+      background: transparent;
+      font-size: 1rem;
+      color: inherit;
+    }
+    
+    .modal input:focus {
+      outline: none;
+      border-bottom: 2px solid black;
+    }
+    
+    body.dark .modal input {
+      border-bottom: 2px solid #FFFFFF;
+      
+    }
+    
+    body.dark .modal input:focus {
+      outline: none;
+      border-bottom: 2px solid white;
+    }
+    
+    .modal label {
+      position: absolute;
+      top: 10px;
+      left: 5px;
+      font-size: 1rem;
+      color: #000000;
+      transition: 0.3s ease all;
+      pointer-events: none;
+    }
+    
+    body.dark .modal label {
+      color: #FFF6F6;
+    }
+    
+    .modal input:focus~label,
+    .modal input:valid~label {
+      top: -10px;
+      font-size: 0.8rem;
+      color: var(--primary);
+    }
+    
+    .modal button {
+      
+      margin-top: 1rem;
+      padding: 0.6rem;
+      width: 45%;
+      border-radius: 8px;
+      font-size: 1rem;
+      background: var(--primary);
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    
+    .modal {
+      position: relative;
+      /* <-- ensure the modal is relatively positioned */
+    }
+    
+    .modal-close {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #999;
+      cursor: pointer;
+      transition: color 0.2s ease;
+    }
+    
+    .modal-close:hover {
+      color: #ff5555;
+    }
+    
+    
+    
+    
+    
+    
+    .modal-buttons {
+      display: flex;
+      justify-content: flex-end;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+    
+    .modal-buttons button {
+      padding: 0.6rem 1rem;
+      font-size: 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      border: none;
+    }
+    
+    /* Primary button: like Yes, Create */
+    .modal-buttons button[type="submit"] {
+      background: green;
+      color: white;
+    }
+    
+    /* Cancel button */
+    .modal-buttons button.cancel-btn {
+      background: transparent;
+      border: 1px solid transparent;
+      border-radius: 12px;
+      background: linear-gradient(#C71F1F, #C71F1F);
+      color: rgba(255, 255, 255, 1);
+      
+    }
+    
+    .modal-buttons button.cancel-btn:hover {
+      background: rgba(220, 233, 242, 0.38);
+      border: 1px solid transparent;
+      border-radius: 8px;
+      background: linear-gradient(#C71F1F, #C71F1F);
+      color: black;
+    }
+    
+    
+    .card-buttons {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.8rem;
+      margin-top: 0.8rem;
+    }
+    
+    .card-buttons button {
+      flex: 1;
+      padding: 0.5rem;
+      font-size: 0.9rem;
+      border-radius: 8px;
+      cursor: pointer;
+      border: none;
+    }
+    
+    /* Open = primary style */
+    .card-buttons .open-btn {
+      background: var(--primary);
+      color: white;
+    }
+    
+    /* Reset = outlined subtle style */
+    .card-buttons .reset-btn {
+      background: transparent;
+      border: 1px solid white;
+      color: white;
+    }
+    
+    .card-buttons .reset-btn:hover {
+      background: rgba(255, 255, 255, 0.15);
+    }
+    
+    
+    
+    body:not(.dark) .card-buttons .reset-btn {
+      color: var(--text-light);
+      border-color: var(--text-light);
+    }
+    
+    body:not(.dark) .card-buttons .reset-btn:hover {
+      background: rgba(0, 0, 0, 0.05);
+    }
+    
+    body:not(.dark) .card-buttons .open-btn {
+      color: white;
+      background: var(--primary);
+    }
+    
+    
+    
+    .theme-toggle-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-size: 0.75rem;
+      gap: 0.2rem;
+      margin-top: 0.5rem;
+      color: var(--text-light);
+    }
+    
+    body.dark .theme-toggle-wrapper small {
+      color: var(--text-dark);
+    }
+    
+    #themeToggle {
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      width: 32px;
+      height: 32px;
+    }
+    
+    #themeIcon svg {
+      width: 100%;
+      height: 100%;
+    }
+    
+    
+    
+    #tabs-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      
+      gap: 5px;
+      width: 99vw;
+      margin: 0;
+      
+      padding: 0 0;
+      /* optional: some side padding */
+      border: none;
+      /*border-bottom: 1px solid var(--separator-color);*/
+      background-color: var(--bg-primary);
+    }
+    
+    #tabs {
+      flex-grow: 1;
+      display: ;
+      
+      text-align: center;
+      overflow-x: auto;
+      white-space: nowrap;
+      scrollbar-width: thin;
+      scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+    }
+    
+    /* Optional: Custom scrollbar for webkit browsers */
+    #tabs::-webkit-scrollbar {
+      height: 6px;
+    }
+    
+    #tabs::-webkit-scrollbar-track {
+      background: var(--scrollbar-track);
+    }
+    
+    #tabs::-webkit-scrollbar-thumb {
+      background-color: var(--scrollbar-thumb);
+      border-radius: 3px;
+    }
+    
+    /* Plus button styles */
+    #addTabBtn {
+      flex-shrink: 0;
+      font-size: 1.5rem;
+      padding: 0.225rem 1.01rem;
+      cursor: pointer;
+      background-color: #44B8EB;
+      border: none;
+      box-shadow: -1px 0px 3px #3368F761;
+      color: var(--btn-text);
+      border-radius: 2px;
+      margin-right: 1px;
+      right: 0%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      position: relative;
+      transition: background-color 0.3s ease;
+    }
+    
+    body.dark #addTabBtn {
+      background-color: #FFFFFF;
+      color: black;
+      box-shadow: -1px 0px 3px #0B57FA99;
+    }
+    
+    #addTabBtn:hover {
+      background-color: #5DA7FF;
+    }
+    
+    /* Existing tab button styles should be compatible */
+    
+    
+    
+    .dashboardbtn,
+    #deleteAllTabsBtn {
+      position: relative;
+      cursor: pointer;
+    }
+    
+    .dashboardbtn::after,
+    #deleteAllTabsBtn::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      bottom: 115%;
+      /* above button */
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 0, 0, 0.75);
+      color: white;
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease-in-out;
+      z-index: 1000;
+    }
+    
+    .dashboardbtn:hover::after,
+    #deleteAllTabsBtn:hover::after {
+      opacity: 1;
+    }
+    
+    #addTabBtn {
+      position: relative;
+      cursor: pointer;
+    }
+    
+    #addTabBtn::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      top: 105%;
+      /* above the button */
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 0, 0, 0.75);
+      color: white;
+      width: 20px;
+      height: auto;
+      text-align: center;
+      
+      padding: 4px 12px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      white-space: wrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease-in-out;
+      z-index: 1000;
+    }
+    
+    #addTabBtn:hover::after {
+      opacity: 1;
+    }
+    
+    
+    
+    
+    /* Task Page Container */
+    .task-page {
+      display: none;
+      flex-direction: column;
+      height: 50vh;
+      padding: 1rem;
+      background: #f9f9f9;
+    }
+    
+    /* Header */
+    .task-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    
+    .task-header h2 {
+      font-size: 1.2rem;
+      flex-grow: 1;
+    }
+    
+    .back-btn {
+      background: transparent;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.5rem;
+      cursor: pointer;
+    }
+    
+    /* Task List */
+    .task-list {
+      flex-grow: 1;
+      overflow-y: auto;
+      
+    }
+    
+    .task-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #FFFFFF;
+      padding: 0.7rem 1rem;
+      border-radius: 12px;
+      margin-bottom: 0.5rem;
+      z-index:-200;
+    }
+    
+    body.dark .task-item {
+      background: ;
+      color: white;
+      
+    }
+    
+    body.dark .task-page {
+      color: white;
+      background: #0C0C0C;
+    }
+    
+    body.dark .back-btn {
+      color: white;
+      background: transparent;
+    }
+    
+    /* Custom Checkbox */
+    .task-checkbox {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      cursor: ;
+      flex-grow: 1;
+    }
+    
+    .task-checkbox input {
+      display: none;
+    }
+    
+    .checkmark {
+      width: 22px;
+      height: 22px;
+      background: #fff;
+      border: 2px solid #999;
+      border-radius: 6px;
+      position: relative;
+      transition: all 0.3s ease;
+    }
+    
+    .task-checkbox input:checked+.checkmark {
+      background: #4caf50;
+border-color: #20BB49;
+    }
+    
+    .checkmark::after {
+      content: "";
+      position: absolute;
+      top: 3px;
+      left: 6px;
+      width: 5px;
+      height: 10px;
+      border: solid #fff;
+      border-width: 0 2px 2px 0;
+      opacity: 0;
+      transform: rotate(45deg);
+      transition: opacity 0.2s;
+    }
+    
+    .task-checkbox input:checked+.checkmark::after {
+      opacity: 1;
+    }
+    
+    /* Delete Button */
+    /*.delete-btn {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  color: red;
+  display:;
+  cursor: pointer;
+  float:right;
+}
+*/
+    /* Input Area */
+    .task-input-area {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+    
+    .task-input-area input {
+      flex-grow: 1;
+      padding: 0.6rem;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+    
+    .add-btn {
+      background: var(--primary, #007bff);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 0.6rem 1rem;
+      cursor: pointer;
+    }
+    
+    /* Custom checkbox like main tracker */
+    .task-label {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      background: #DFDFDF;
+      padding: 0.7rem 1rem;
+      border-radius: 12px;
+      cursor: ;
+      /* 👉 Whole label clickable */
+      margin-bottom: 0.5rem;
+      user-select: none;
+      position: relative;
+    }
+    
+    .task-label input[type="checkbox"] {
+      position: absolute;
+      opacity: 0;
+      cursor: ;
+      height: 0;
+      width: 0;
+    }
+    
+    .checkmark2 {
+      width: 24px;
+      height: 24px;
+      background: #FFFFFF;
+      border-radius: 6px;
+      position: relative;
+      transition: background 0.3s;
+      flex-shrink: 0;
+    }
+    
+    .task-label input[type="checkbox"]:checked+.checkmark2 {
+      background: var(--primary);
+      animation: pop 0.3s ease;
+    }
+    
+    @keyframes pop {
+      50% {
+        transform: scale(1.3);
+      }
+    }
+    
+    .checkmark2 svg {
+      position: absolute;
+      top: 3px;
+      left: 5px;
+      width: 14px;
+      height: 14px;
+      stroke: white;
+      stroke-width: 3;
+      fill: none;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    
+    .task-label input[type="checkbox"]:checked+.checkmark2 svg {
+      opacity: 1;
+    }
+    
+    .task-text {
+      flex: 1;
+    }
+    
+    
+    /*.delete-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 1.1rem;
+  display: none;
 }
 
-/* Hover tooltip */
-.action-btn::after {
-content: attr(title);
-position: absolute;
-
-bottom: -1.8rem;
-background: rgba(0, 0, 0, 0.8);
-color: white;
-padding: 3px 2px;
-border-radius: 4px;
-font-size: 0.7rem;
-white-space: nowrap;
-opacity: 0;
-pointer-events: none;
-transition: opacity 0.2s ease;
+.task-label:hover .delete-btn {
+  display: inline;
+}*/
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    /* ---------- Task list container (60-70% vw) ---------- */
+    #taskList {
+      width: clamp(60vw, 65vw, 70vw);
+      /* min 60vw, ideal 65vw, max 70vw */
+      max-width: 1000px;
+      margin: 20px auto;
+      padding: 12px;
+      box-sizing: border-box;
+      background: #fafafa;
+      border-radius: 10px;
+    }
+    
+    body.dark #taskList {
+      background: #0F3C5978;
+    }
+    
+    /* ---------- Task item and row ---------- */
+    .task-item {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+    
+    body.dark .task-item {
+      background: #327FA7;
+      
+    }
+    
+    .task-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding-left: 10px;
+      background: #fff;
+      border: 1px solid #e6e6e6;
+      border-radius: 8px;
+      position: relative;
+      /* for options menu absolute positioning */
+      overflow: ;
+      width: 100%;
+    }
+    
+    body.dark .task-row {
+      background: transparent;
+      
+    }
+    
+    
+    
+    
+    .add-taskpage{
+      background: #4C910D;
+      color:white;
+      border:none;
+      outline:none;
+      padding:5px;
+      border-radius:4px;
+    }
+.add-taskpage.btnjump {
+  animation: jumpanimation 0.6s ease-in-out; /* shorter, snappier */
 }
 
-.action-btn:hover::after {
-opacity: 1;
-}
-
-.plus-tab { font-weight: bold;}
-main { padding: 1rem; }
-
-/* Dashboard */
-.dashboard-grid {
-display: grid;
-gap: 1rem;
-grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-}
-.dashboard-card {
-border-radius: 12px;
-padding: 1rem;
-color: white;
-display: flex;
-flex-direction: column;
-box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-  transition: background-color 0.4s ease-in-out;
-  animation: cardEnter 0.5s ease forwards;
-  opacity: 0;
-  transform: translateY(50px);
-}
-
-/* Colors repeat every 5 cards */
-.dashboard-card:nth-child(5n + 1) { background: var(--card1); }
-.dashboard-card:nth-child(5n + 2) { background: var(--card2); }
-.dashboard-card:nth-child(5n + 3) { background: var(--card3); }
-.dashboard-card:nth-child(5n + 4) { background: var(--card4); }
-.dashboard-card:nth-child(5n + 5) { background: var(--card5); }
-
-/* Stagger delays for wave effect */
-
-/* Slide + fade in animation */
-@keyframes cardEnter {
+@keyframes jumpanimation {
   0% {
-    opacity: 0;
-    transform: translateY(50px);
+    
+    background: #FF0000;
+    transform: scale(1.1);
   }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
+  90% {
+    
+border:none;
+    background: #4C910D;
+    transform: scale(1);
+  }
+  100%{
+    border:none;
+    background:#4C910D;
+transform: scale(1);
   }
 }
+    
+    
+    /* ---------- Checkbox (styled like day checkbox) ---------- */
+    /* gap between checkmark and text = 4px as requested */
+    .task-checkbox {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      /* <-- reduced gap */
+      flex: 1 1 auto;
+      /* take remaining space */
+      min-width: 0;
+      /* required so child can shrink */
+      cursor: ;
+    }
+    
+    /* hide native checkbox (we show .checkmark) */
+    .task-checkbox input[type="checkbox"] {
+      opacity: 0;
+      width: 18px;
+      height: 18px;
+      margin: 0;
+      position: relative;
+      z-index: 2;
+    }
+    
+    /* visual box */
+    .checkmark {
+      width: 20px;
+      height: 20px;
+      border: 2px solid #555;
+      border-radius: 4px;
+      background: #fff;
+      display: inline-block;
+      position: relative;
+      flex-shrink: 0;
+    }
+    
+    /* tick */
+    .task-checkbox input[type="checkbox"]:checked+.checkmark {
+      background: #4caf50;
+      border-color: #4caf50;
+    }
+    
+    .task-checkbox input[type="checkbox"]:checked+.checkmark::after {
+      content: "";
+      position: absolute;
+      left: 6px;
+      top: 2px;
+      width: 6px;
+      height: 11px;
+      border: solid white;
+      border-width: 0 2px 2px 0;
+      transform: rotate(45deg);
+    }
+    
+    /* ---------- Task text: wraps like a textarea (multiple lines) ---------- */
+    .task-text {
+      display: block;
+      flex: 1 1 auto;
+      /* fill space between checkmark and options button */
+      min-width: 0;
+      /* critical for correct flex shrink */
+      white-space: normal;
+      /* allow wrapping onto multiple lines */
+      word-break: break-word;
+      /* break very long words */
+      overflow-wrap: anywhere;
+      font-size: 14px;
+      line-height: 1.7;
+      color: #222;
+      margin: 0;
+      /* ensure it starts right beside checkmark */
+    }
+    
+    body.dark .task-text {
+      color: white;
+    }
+    
+    /* ---------- Options (three dots) ---------- */
+    .task-options-btn {
+      flex: 0 0 auto;
+      background: none;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+      padding: 6px;
+      margin-left: 8px;
+    }
+    
+    body.dark .task-options-btn {
+      color: white;
+    }
+    
+    /* dropdown menu */
+    .task-options-menu {
+      position: absolute;
+      top: calc(100% + 8px);
+      right: 10px;
+      display: none;
+      flex-direction: column;
+      min-width: 140px;
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+      z-index: 200;
+    }
+    
+    .task-options-menu button {
+      background: none;
+      border: none;
+      text-align: left;
+      padding: 8px 12px;
+      cursor: pointer;
+      width: 100%;
+    }
+    
+    .task-options-menu button:hover {
+      background: #f2f2f2;
+    }
+    
+    /* ---------- Toggle button (between row and panel) ---------- */
+    .timer-toggle-btn {
+      display: none;
+      /* shown by JS when user opens Timer from menu */
+      width: 100%;
+      height: 30px;
+      font-size: 13px;
+      margin-top: 6px;
+      background: #f0f0f0;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      text-align: center;
+    }
+    
+    .timer-toggle-btn:hover {
+      background: #e6e6e6;
+    }
+    
+    /* ---------- Timer panel ---------- */
+    .task-timer-panel {
+      display: none;
+      width: 100%;
+      margin-top: 6px;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      background: #fff;
+      position: relative;
+      box-sizing: border-box;
+    }
+    
+    .task-timer-panel.show {
+      display: block;
+    }
+    
+    /* cut button inside panel (top-right) */
+    .cut-timer-btn {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: transparent;
+      border: none;
+      font-size: 16px;
+      cursor: pointer;
+      color: #FF0000;
+    }
+    
+    .cut-timer-btn:hover {
+      color: red;
+    }
+    
+    /* timer display and controls */
+    .task-timer-display {
+      text-align: center;
+      font-family: monospace;
+      font-weight: 700;
+      margin-top: 8px;
+      font-size: 1.05rem;
+      color: #222;
+    }
+    
+    .task-timer-inputs {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin: 12px 0;
+      flex-wrap: wrap;
+    }
+    
+    .task-timer-inputs input {
+      width: 64px;
+      padding: 6px;
+      border-radius: 4px;
+      border: 1px solid #bbb;
+      text-align: center;
+    }
+    
+    /* timer buttons (Start, +1, Reset) */
+    .task-timer-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    
+    .task-timer-buttons button {
+      padding: 6px 10px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      font-size: 13px;
+    }
+    
+    .start-btn {
+      background: #2196f3;
+      color: #fff;
+    }
+    
+    .add1-btn {
+      background: #ff9800;
+      color: #fff;
+    }
+    
+    .reset-btn {
+      background: #f44336;
+      color: #fff;
+    }
+    
+    /* responsive */
+    @media (max-width: 640px) {
+      #taskList {
+        width: 92vw;
+        padding: 10px;
+      }
+      
+      .task-timer-inputs input {
+        width: 48px;
+      }
+    }
+    
+    
+    .day-progress { width: 80px; height:8px; background: rgba(0,0,0,0.06); border-radius:6px; overflow:hidden; display:inline-block; vertical-align:middle; }
+.day-progress-bar { width:0%; height:100%; background: linear-gradient(90deg,#6ad8ff,#7be0a8); transition: width 0.3s ease; border-radius:6px; }
+.add-btn { display:inline-flex; align-items:center; gap:8px; padding:8px 12px; background: linear-gradient(135deg,#6ad8ff,#6fbfef); border:none; border-radius:8px; cursor:pointer; color:#022; box-shadow:0 3px 10px rgba(0,0,0,0.08); font-weight:700; }
 
+/* dark mode */
+body.dark .add-btn { background: linear-gradient(135deg,#2f6b8f,#275a80); color:#fff; box-shadow:none; }
 
-.card-progress {
-  width: 100%;
-  background: #eee;
-  height: 8px;
-  border-radius: 4px;
-  overflow: hidden;
-  margin: 0.5rem 0;
+    
+    /* ---------- Timer ring & clock icon styles (new) ---------- */
+    /* Container for the ring and the time label */
+    .timer-ring {
+      width: 120px;
+      height: 120px;
+      margin: 6px auto 8px auto;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    /* SVG sits full-size */
+    .timer-ring svg {
+      width: 120px;
+      height: 120px;
+      transform: rotate(-90deg);
+      /* start at top */
+      display: block;
+      background: ;
+    }
+    
+    /* background circle */
+    .timer-ring .ring-bg {
+      stroke: #eee;
+      stroke-width: 8;
+      fill: none;
+    }
+    
+    /* foreground active circle */
+    .timer-ring .ring-fg {
+      stroke: #2196f3;
+      /* progress color */
+      stroke-width: 8;
+      stroke-linecap: round;
+      fill: none;
+      transition: stroke-dashoffset 0.4s linear;
+      /* smooth shrink */
+    }
+    
+    /* label centered inside ring (remaining time) */
+    .timer-ring .ring-label {
+      position: absolute;
+      top: 0%;
+      left: 0%;
+      
+      transform: translate(-4%, 0%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: monospace;
+      font-weight: 700;
+      font-size: 0.95rem;
+      
+      background: ;
+      pointer-events: none;
+      color: #111;
+    }
+    
+    /* small clock icon on top-left of panel */
+    .task-timer-panel .timer-clock-icon {
+      position: absolute;
+      left: 8px;
+      top: 8px;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #666;
+      pointer-events: none;
+      opacity: 0.95;
+    }
+    
+    /* adjust layout to not collide: push display below ring if present */
+    .task-timer-panel .task-timer-display {
+      margin-top: 6px;
+      /* ring will take precedence */
+    }
+    
+    /* Smaller ring on small screens */
+    /*
+@media (max-width: 480px) {
+  .timer-ring { width: 76px; height: 76px; }
+  .timer-ring svg { width: 76px; height: 76px; }
+  .timer-ring .ring-label { font-size: 0.85rem; }
+}*/
+    
+    /* --- Ring label - ensure it fits inside circle --- */
+    .timer-ring .ring-label {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: monospace;
+      font-weight: 700;
+      font-size: 0.85rem;
+      /* slightly smaller to ensure fit */
+      pointer-events: none;
+      color: #111;
+      white-space: nowrap;
+      padding: 6px;
+      /* give small padding so long text won't overflow */
+      box-sizing: border-box;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+    
+    /* When time is up — brighter panel and subtle pulse */
+    .task-timer-panel.alarm {
+      background: #fff7d6;
+      /* brighter warm background */
+      border-color: #ffdd57;
+      box-shadow: 0 6px 18px rgba(255, 200, 50, 0.12);
+      transition: background 0.2s ease, box-shadow 0.2s ease;
+    }
+    
+    /* subtle pulsing ring when alarming */
+    .task-timer-panel.alarm .ring-fg {
+      animation: ring-pulse 1.4s infinite ease-in-out;
+    }
+    
+    @keyframes ring-pulse {
+      0% {
+        stroke-width: 8;
+        stroke-opacity: 1;
+      }
+      
+      50% {
+        stroke-width: 10;
+        stroke-opacity: 0.9;
+      }
+      
+      100% {
+        stroke-width: 8;
+        stroke-opacity: 1;
+      }
+    }
+    
+    /* While alarming, hide the Start button and show only +1 and Reset more prominently */
+    .task-timer-panel.alarm .start-btn {
+      display: none !important;
+    }
+    
+    .task-timer-panel .reset-btn {
+      display: none;
+      /* default hidden — set inline-block when needed via JS */
+    }
+    
+    /* make +1 and reset clear and prominent */
+    .task-timer-panel .add1-btn,
+    .task-timer-panel .reset-btn {
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-weight: 600;
+    }
+    
+    
+    .timer-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 6px 10px;
+      border-bottom: 1px solid #ccc;
+    }
+    
+    .timer-clock-left {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #333;
+    }
+    
+    .timer-label-text {
+      user-select: none;
+    }
+    
+    .cut-timer-btn {
+      background: transparent;
+      border: none;
+      font-size: 1.2rem;
+      cursor: pointer;
+      color: #636363;
+      transition: color 0.2s;
+    }
+    
+    .cut-timer-btn:hover {
+      color: #e74c3c;
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    .task-btn {
+      border: none;
+      border-radius: 5px;
+      background: #0C0C0C;
+      color: white;
+      padding: 0.5rem;
+    }
+    
+    /* Ring visuals & alarm glow (append to your CSS) */
+    
+    /* ensure ring-bg and ring-fg are styled */
+    .timer-ring-svg {
+      width: 80px;
+      height: 80px;
+      display: inline-block;
+    }
+    
+    .timer-ring-svg .ring-bg {
+      stroke: var(--ring-bg, #eee);
+      stroke-width: 6;
+      fill: none;
+    }
+    
+    .timer-ring-svg .ring-fg {
+      stroke: var(--ring-fg, #4caf50);
+      stroke-width: 6;
+      fill: none;
+      transform: rotate(-90deg);
+      transform-origin: 50% 50%;
+      transition: stroke-dashoffset 0.2s linear;
+    }
+    
+    /* red alarm glow on panel */
+    .task-timer-panel.alarm {
+      animation: alarmPulse 1s ease-in-out infinite;
+      border-color: #f44336;
+      background: linear-gradient(180deg, rgba(255, 230, 230, 0.05), rgba(255, 200, 200, 0.02));
+    }
+    
+    /* ring glow */
+    .ring-glow {
+      filter: drop-shadow(0 0 12px rgba(244, 67, 54, 0.95));
+      stroke: #f44336 !important;
+      animation: ringGlow 1s ease-in-out infinite;
+    }
+    
+    @keyframes alarmPulse {
+      0% {
+        box-shadow: 0 0 0 rgba(244, 67, 54, 0);
+        transform: translateY(0);
+      }
+      
+      50% {
+        box-shadow: 0 10px 30px rgba(244, 67, 54, 0.12);
+        transform: translateY(-1px);
+      }
+      
+      100% {
+        box-shadow: 0 0 0 rgba(244, 67, 54, 0);
+        transform: translateY(0);
+      }
+    }
+    
+    @keyframes ringGlow {
+      0% {
+        filter: drop-shadow(0 0 2px rgba(244, 67, 54, 0.6));
+        transform: scale(1);
+      }
+      
+      50% {
+        filter: drop-shadow(0 0 14px rgba(244, 67, 54, 0.95));
+        transform: scale(1.02);
+      }
+      
+      100% {
+        filter: drop-shadow(0 0 2px rgba(244, 67, 54, 0.6));
+        transform: scale(1);
+      }
+    }
+    
+    /* small improvements so label fits inside ring on narrow screens */
+    .timer-ring {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .ring-label {
+      position: relative;
+      margin-left: 8px;
+      font-family: monospace;
+      font-size: 0.9rem;
+      white-space: nowrap;
+    }
+    
+    /*@media (max-width:420px) {
+  .timer-ring-svg { width: 60px; height: 60px; }
+  .ring-label { font-size: 0.8rem; }
+}
+*/
+    
+    
+    /* Time-Up popup bar */
+    /* popup */
+    .timeup-popup {
+      position: fixed;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #ff4d4f;
+      color: white;
+      padding: 10px 16px;
+      border-radius: 8px;
+      z-index: 99999;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      font-weight: 700;
+      min-width: 320px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+      cursor: pointer;
+    }
+    
+    
+    .timeup-popup .remove-btn {
+      margin-left: auto;
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      color: white;
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    
+    .timeup-popup .timeup-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    
+    .timeup-popup .timeup-info .tab {
+      font-size: 0.95rem;
+      font-weight: 800;
+    }
+    
+    .timeup-popup .timeup-info .date {
+      font-size: 0.78rem;
+      opacity: 0.95;
+      font-weight: 600;
+    }
+    
+    .timeup-popup .timeup-info .task {
+      font-size: 0.88rem;
+      margin-top: 4px;
+      font-weight: 600;
+    }
+    
+    .timeup-popup .hint {
+      font-size: 0.82rem;
+      opacity: 0.95;
+      margin-left: 6px;
+    }
+    
+    /* highlight on the task item so it's easy to find (persistent) */
+    .timeup-highlight {
+      box-shadow: 0 0 8px rgba(244, 67, 54, 0.95) !important;
+      border-radius: 8px;
+      border: 1px solid rgba(244, 67, 54, 0.9) !important;
+      transition: box-shadow .25s, transform .15s;
+      z-index: ;
+    }
+    
+    .timeup-highlight.pulse {
+      animation: highlight-pulse 1.2s ease-in-out infinite;
+    }
+    
+    @keyframes highlight-pulse {
+      0% {
+        transform: translateY(0) scale(1);
+      }
+      
+      50% {
+        transform: translateY(-1px) scale(1.01);
+      }
+      
+      100% {
+        transform: translateY(0) scale(1);
+      }
+    }
+    
+    /* Dropdown menu above everything */
+    /*  .task-timer-panel.alarm {
+  position: relative; /* create stacking context 
+  z-index: 10;        /* ensure it's above siblings 
 }
 
-.card-progress-bar {
-  height: 100%;
-  background: #10b981; /* green */
-  transition: width 0.3s ease;
+.task-timer-panel.alarm .dropdown {
+  z-index: 20;        /* dropdown is always above glow 
 }
-
-/* Tracker */
-.progress-container { background: #ddd; border-radius: 10px; overflow: hidden; height: 10px; margin: 0.5rem 0; }
-.progress-bar { background: var(--primary); height: 100%; width: 0; transition: width 0.4s ease; }
-.week-title { font-weight: bold; margin-top: 1rem; }
-label.checkbox {
-display: flex; align-items: center; gap: 0.8rem;
-background: #DFDFDF; padding: 0.7rem 1rem; border-radius: 12px;
-cursor: pointer; margin-bottom: 0.5rem;
-}
-body.dark label.checkbox { background: #374151; }
-input[type="checkbox"] { display: none; }
-.checkmark {
-width: 24px; height: 24px; background: #FFFFFF; border-radius: 6px;
-position: relative; transition: background 0.3s;
-}
-input:checked + .checkmark { background: var(--primary); animation: pop 0.3s ease; }
-@keyframes pop { 50% { transform: scale(1.3); } }
-.checkmark svg {
-position: absolute; top: 3px; left: 5px; width: 14px; height: 14px;
-stroke: white; stroke-width: 3; fill: none; opacity: 0; transition: opacity 0.2s;
-}
-input:checked + .checkmark svg { opacity: 1; }
-
-/* Modal with Floating Labels */
-.modal-overlay {
-position: fixed; top:0; left:0; right:0; bottom:0;
-background: var(--overlay); display: none;
-align-items: center; justify-content: center; z-index: 100;
-}
-.modal {
-background: white; border-radius: 12px; padding: 1rem;
-width: 90%; max-width: 400px; text-align: center;
-}
-body.dark .modal { background: #1f2937; color: white; }
-.modal h2 { margin-top: 0; }
-.form-group { position: relative; margin-top: 1.5rem; }
-.modal input {
-width: 96%; padding: 10px 10px 10px 5px;
-border: none; border-bottom: 2px solid #ccc;
-background: transparent; font-size: 1rem;
-color: inherit;
-}
-.modal input:focus { outline: none; border-bottom: 2px solid var(--primary); }
-.modal label {
-position: absolute; top: 10px; left: 5px;
-font-size: 1rem; color: #999;
-transition: 0.3s ease all; pointer-events: none;
-}
-.modal input:focus ~ label,
-.modal input:valid ~ label {
-top: -10px; font-size: 0.8rem; color: var(--primary);
-}
-.modal button {
-  
-margin-top: 1rem; padding: 0.6rem; width: 45%; 
-border-radius: 8px; font-size: 1rem;
-background: var(--primary); color: white; border: none;
-cursor: pointer;
-}
-
-.modal {
-  position: relative; /* <-- ensure the modal is relatively positioned */
-}
-
-.modal-close {
+.dropdown.show {
   position: absolute;
-  top: 10px;
-  right: 15px;
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: #999;
-  cursor: pointer;
-  transition: color 0.2s ease;
+  z-index: 9999; /* top layer 
 }
-
-.modal-close:hover {
-  color: #ff5555;
-}
-
-
-
-
-
-
-.modal-buttons {
-  display: flex;
-  justify-content: flex-end;
-  gap: 1rem;
-  margin-top: 1.5rem;
-}
-
-.modal-buttons button {
-  padding: 0.6rem 1rem;
-  font-size: 1rem;
+    */
+    /* ----- TASK PAGE & TIMER CSS (merged + fixes) ----- */
+    
+    /* Task Page Container */
+    /* temporary toast */
+.temp-toast{
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%) translateY(-12px);
+  top: 14px;
+  background: rgba(0,0,0,0.85);
+  color: white;
+  padding: 8px 14px;
   border-radius: 8px;
-  cursor: pointer;
-  border: none;
+  z-index: 2147483646;
+  opacity: 0;
+  transition: transform 0.22s ease, opacity 0.22s ease;
+  pointer-events: none;
+  font-weight: 700;
+}
+.temp-toast.show{ transform: translateX(-50%) translateY(0); opacity: 1; }
+.temp-toast.info{ background: rgba(0,0,0,0.85); }
+.temp-toast.warn{ background: #ffa500; color: #111; }
+
+
+    .task-page {
+      display: none;
+      flex-direction: column;
+      height: 50vh;
+      padding: 1rem;
+      background: #f9f9f9;
+    }
+    
+    /* Header */
+    .task-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    
+    .task-header h2 {
+      font-size: 1.2rem;
+      flex-grow: 1;
+    }
+    
+    .back-btn {
+      background: transparent;
+      border: none;
+      font-size: 2.5rem;
+      cursor: pointer;
+    }
+    
+    /* The task list container */
+    #taskList {
+      width: clamp(60vw, 65vw, 70vw);
+      max-width: 1000px;
+      margin: 20px auto;
+      padding: 12px;
+      box-sizing: border-box;
+      background: #fafafa;
+      border-radius: 10px;
+    }
+    
+    /* TASK ITEM / ROW */
+    .task-item {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 10px;
+      
+      /* allow absolute children to overlap neighbors */
+      position: relative;
+      z-index: 0;
+      overflow: visible;
+      /* !!!! prevents dropdown clipping */
+    }
+    
+    /* row container */
+    .task-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding-left: 10px;
+      background: #fff;
+      border: 1px solid #e6e6e6;
+      border-radius: 8px;
+      position: relative;
+      overflow: visible !important;
+      width: 100%;
+    }
+    
+    /* options menu (dropdown) - above everything */
+    .task-options-menu {
+      
+      box-sizing: border-box;
+  max-width: 220px;     /* reduce wide menus */
+  
+  white-space: wrap;  /* keep single-line items */
+      position: absolute;
+      top: calc(100% + 8px);
+      right: 10px;
+      display: none;
+      flex-direction: column;
+      min-width: 140px;
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+      z-index: 11000 !important;
+      /* ensure above glow */
+    }
+    
+    /* Timer toggle btn */
+    .timer-toggle-btn {
+      display: none;
+      width: 100%;
+      height: 30px;
+      margin-top: 6px;
+    }
+    
+    /* Timer panel */
+    .task-timer-panel {
+      display: none;
+      width: 100%;
+      margin-top: 6px;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      background: #fff;
+      position: relative;
+      box-sizing: border-box;
+    }
+    
+    .task-timer-panel.show {
+      display: block;
+    }
+    
+    /* cut button */
+    .cut-timer-btn {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: transparent;
+      border: none;
+      font-size: 16px;
+      cursor: pointer;
+      color: #636363;
+    }
+    
+    .cut-timer-btn:hover {
+      color: #e74c3c;
+    }
+    
+    /* Timer ring & label */
+    .timer-ring {
+      width: 120px;
+      height: 120px;
+      margin: 6px auto 8px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .timer-ring svg {
+      width: 120px;
+      height: 120px;
+      transform: rotate(-90deg);
+      display: block;
+    }
+    
+    .timer-ring .ring-bg {
+      stroke: #eee;
+      stroke-width: 8;
+      fill: none;
+    }
+    
+    .timer-ring .ring-fg {
+      stroke: #2196f3;
+      stroke-width: 8;
+      stroke-linecap: round;
+      fill: none;
+      transition: stroke-dashoffset 0.25s linear;
+      transform-origin: 50% 50%;
+    }
+    
+    .timer-ring .ring-label {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: monospace;
+      font-weight: 700;
+      font-size: 0.85rem;
+      pointer-events: none;
+      color: #111;
+    }
+    
+    /* Alarm styling for panel */
+    .task-timer-panel.alarm {
+      background: linear-gradient(180deg, rgba(255, 230, 230, 0.05), rgba(255, 200, 200, 0.02));
+      border-color: #f44336;
+      animation: alarmPulse 1s ease-in-out infinite;
+    }
+    
+    @keyframes alarmPulse {
+      0% {
+        box-shadow: 0 0 0 rgba(244, 67, 54, 0);
+        transform: translateY(0);
+      }
+      
+      50% {
+        box-shadow: 0 10px 30px rgba(244, 67, 54, 0.12);
+        transform: translateY(-1px);
+      }
+      
+      100% {
+        box-shadow: 0 0 0 rgba(244, 67, 54, 0);
+        transform: translateY(0);
+      }
+    }
+    
+    /* ring glow */
+    .ring-glow {
+      filter: drop-shadow(0 0 12px rgba(244, 67, 54, 0.95));
+      stroke: #f44336 !important;
+      animation: ringGlow 1s ease-in-out infinite;
+    }
+    
+    @keyframes ringGlow {
+      0% {
+        filter: drop-shadow(0 0 2px rgba(244, 67, 54, 0.6));
+        transform: scale(1);
+      }
+      
+      50% {
+        filter: drop-shadow(0 0 14px rgba(244, 67, 54, 0.95));
+        transform: scale(1.02);
+      }
+      
+      100% {
+        filter: drop-shadow(0 0 2px rgba(244, 67, 54, 0.6));
+        transform: scale(1);
+      }
+    }
+    
+    /* highlight on the task item for time-up (persistent) */
+    .timeup-highlight {
+      box-shadow: 0 0 12px rgba(244, 67, 54, 0.95) !important;
+      border-radius: 8px;
+      border: 1px solid rgba(244, 67, 54, 0.9) !important;
+      transition: box-shadow .25s, transform .15s;
+      z-index: 1000 !important;
+      /* above neighbors */
+      overflow: visible;
+    }
+    
+    .timeup-highlight.pulse {
+      animation: highlight-pulse 1.2s ease-in-out infinite;
+    }
+    
+    @keyframes highlight-pulse {
+      0% {
+        transform: translateY(0);
+      }
+      
+      50% {
+        transform: translateY(-1px);
+      }
+      
+      100% {
+        transform: translateY(0);
+      }
+    }
+    
+    /* Time-Up popup .vertical stacked: top offset is managed by JS */
+    .timeup-popup {
+      position: fixed;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #ff4d4f;
+      color: white;
+      padding: 10px 16px;
+      border-radius: 8px;
+      z-index: 99999;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      font-weight: 700;
+      min-width: 320px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+      cursor: pointer;
+    }
+    
+    .timeup-popup .remove-btn {
+      margin-left: auto;
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      color: white;
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    
+    .timeup-popup .timeup-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    
+    .timeup-popup .timeup-info .tab {
+      font-size: 0.95rem;
+      font-weight: 800;
+    }
+    
+    .timeup-popup .timeup-info .date {
+      font-size: 0.78rem;
+      opacity: 0.95;
+      font-weight: 600;
+    }
+    
+    .timeup-popup .timeup-info .task {
+      font-size: 0.88rem;
+      margin-top: 4px;
+      font-weight: 600;
+    }
+    
+    .timeup-popup .hint {
+      font-size: 0.82rem;
+      opacity: 0.95;
+      margin-left: 6px;
+    }
+    
+    /* small responsive tweaks */
+    @media (max-width: 640px) {
+      #taskList {
+        width: 92vw;
+        padding: 10px;
+      }
+      
+      .timer-ring svg {
+        width: 76px;
+        height: 76px;
+      }
+      
+      .timer-ring .ring-label {
+        font-size: 0.8rem;
+      }
+    }
+    
+    
+    
+    
+    
+    /* ---------- Small UI tweaks (insert near other task-options-menu / checkmark CSS) ---------- */
+
+/* Make the floating options menu narrower and fit nicely */
+.task-options-menu {
+  
 }
 
-/* Primary button: like Yes, Create */
-.modal-buttons button[type="submit"] {
-  background: var(--primary);
-  color: white;
+/* Prevent the small black polyline SVG from showing in day checkmark
+   until the checkbox is actually checked. This removes the stray black triangle. */
+.checkbox .checkmark svg {
+  opacity: 0;
+  transition: opacity 0.14s ease;
+  stroke: transparent;   /* hide by default */
 }
 
-/* Cancel button */
-.modal-buttons button.cancel-btn {
-  background: transparent;
-  border: 1px solid var(--primary);
-  color: var(--primary);
+/* When the native input (hidden) is checked, show the SVG tick and ensure stroke is white */
+.checkbox input[type="checkbox"]:checked + .checkmark svg {
+  opacity: 0;
+  stroke: white;         /* visible tick color (matches your checked look) */
+}
+    
+    
+    
+    
+    
+    
+  
+  /* green/blue glow for active timers (non-timeUp) */
+.running-glow {
+  box-shadow: 0 0 12px rgba(34, 197, 94, 0.9);
+  border: 1px solid rgba(34, 197, 94, 0.8);
+  z-index: 1000 !important;
+}
+  
+  
+    
+    
+    /* Positioning helper: ensure checkbox label can show badge */
+.checkbox { position: relative; }
+
+/* green dot when an active timer is present */
+/*.checkbox.timer-running::after {
+  content: "";
+  position: absolute;
+  top: 8px;
+  right: 6px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #16a34a; 
+  box-shadow: 0 0 8px rgba(22,163,74,0.8);
+}
+*/
+/* red dot when any time-up exists */
+/*
+.checkbox.timer-timeup::after {
+  content: "";
+  position: absolute;
+  top: 8px;
+  right: 6px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #ef4444; 
+  box-shadow: 0 0 12px rgba(239,68,68,0.9);
+}*/
+
+/* timeup should override running */
+/*.checkbox.timer-running.timer-timeup::after {
+  background: #ef4444;
+  box-shadow: 0 0 12px rgba(239,68,68,0.9);
+}*/
+    
+    /* Add-Task button badge: green when timer running (or paused), red when any time-up */
+.add-taskpage.timer-running::after,
+.add-taskpage.timer-timeup::after {
+  content: "";
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid white;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.25);
 }
 
-.modal-buttons button.cancel-btn:hover {
-  background: rgba(255, 124, 0, 0.1);
+/* green dot */
+.add-taskpage.timer-running::after {
+  background: #16a34a;
+  box-shadow: 0 0 8px rgba(22, 163, 74, 0.85);
 }
 
-
-
-
-
-
-
-.card-buttons {
-  display: flex;
-  justify-content: space-between;
-  gap: 0.8rem;
-  margin-top: 0.8rem;
+/* red dot (overrides green if both set) */
+.add-taskpage.timer-timeup::after {
+  background: #ef4444;
+  box-shadow: 0 0 10px rgba(239, 68, 68, 0.9);
 }
 
-.card-buttons button {
-  flex: 1;
-  padding: 0.5rem;
-  font-size: 0.9rem;
-  border-radius: 8px;
-  cursor: pointer;
-  border: none;
+/* If both classes present, red should win */
+.add-taskpage.timer-running.timer-timeup::after {
+  background: #ef4444;
+  box-shadow: 0 0 10px rgba(239, 68, 68, 0.9);
 }
+    
+    
+  
+    
+    
+    
+    
+    
+    /* Celebration */
+    .celebration-popup {
+      position: fixed;
+      top: 15%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--primary);
+      color: white;
+      padding: 1rem 1.5rem;
+      border-radius: 12px;
+      font-size: 1.1rem;
+      opacity: 0;
+      transition: opacity 0.3s;
+      z-index: 200;
+    }
+    
+    .celebration-popup.show {
+      opacity: 1;
+    }
+    
+    #confetti-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 199;
+    }
+    
+    
+  </style>
+</head>
+<script>
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("./sw.js")
+      .then(() => console.log("✅ Service Worker registered"))
+      .catch((err) => console.error("SW registration failed:", err));
+  }
+</script>
 
-/* Open = primary style */
-.card-buttons .open-btn {
-  background: var(--primary);
-  color: white;
-}
+<body>
+  <canvas id="confetti-canvas"></canvas>
+  
+  
+  
+  <div class="navcontainer">
+    
+    <header>
+      <h1 style="font-weight:1000;font-size: 1.35rem;">Day Tracker</h1>
+      <div class="actions">
+        <div class="theme-toggle-wrapper">
+          <button id="themeToggle" onclick="toggleDarkMode()" aria-label="Toggle Theme">
+            <span id="themeIcon"></span>
+          </button>
+          <small id="themeToggleLabel">Switch to Dark Mode</small>
+        </div>
+        <div class="action-btn" onclick="exportData()" title="Export Data">
+          <span class="material-icons">file_upload</span>
+          <small>Export</small>
+        </div>
+        <div class="action-btn" onclick="importData()" title="Import Data">
+          <span class="material-icons">file_download</span>
+          <small>Import</small>
+        </div>
+        <div class="action-btn" id="resetBtn" style="display:none;" title="Reset">
+          <span class="material-icons">restart_alt</span>
+          <small>Reset</small>
+        </div>
+      </div>
+    </header>
+    <div id="tabs-wrapper">
+      <nav id="tabs"></nav>
+      <button id="addTabBtn" class="plus-tab">
+        +
+      </button>
+    </div>
+  </div>
+  <div id="mainbodycontainer">
+    <main id="content">
+      <div id="day-container"></div>
+    </main>
+    
+    <div id="taskPage" class="task-page">
+      <!-- Header -->
+      <div class="task-header">
+        <button id="taskPageBackBtn" class="back-btn">←</button>
+        <h2 id="taskPageTitle"></h2>
+      </div>
+      
+      <!-- Task List -->
+      <div id="taskList" class="task-list"></div>
+      
+      <!-- Add New Task -->
+      <div class="task-input-area">
+        <input type="text" id="taskPageInput" placeholder="Add new task..." />
+        <button id="taskPageAddBtn" class="add-btn">＋</button>
+      </div>
+    </div>
+  </div>
+  
+  
+  
+  
+  
+  
+  </main>
+  
+  </div>
+  <div class="modal-overlay" id="modalOverlay">
+    
+    <div class="modal" id="modalBox">
+      <span class="modal-close" onclick="document.getElementById('modalOverlay').style.display='none'">&times;</span>
+      <h2 id="modalTitle"></h2>
+      <div id="modalBody"></div>
+    </div>
+  </div>
+  <div class="celebration-popup" id="celebrationPopup"></div>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+</body>
 
-/* Reset = outlined subtle style */
-.card-buttons .reset-btn {
-  background: transparent;
-  border: 1px solid white;
-  color: white;
-}
-
-.card-buttons .reset-btn:hover {
-  background: rgba(255, 255, 255, 0.15);
-}
-
-
-
-body:not(.dark) .card-buttons .reset-btn {
-  color: var(--text-light);
-  border-color: var(--text-light);
-}
-
-body:not(.dark) .card-buttons .reset-btn:hover {
-  background: rgba(0, 0, 0, 0.05);
-}
-
-body:not(.dark) .card-buttons .open-btn {
-  color: white;
-  background: var(--primary);
-}
-
-
-
-.theme-toggle-wrapper {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  font-size: 0.75rem;
-  gap: 0.2rem;
-  margin-top: 0.5rem;
-  color: var(--text-light);
-}
-
-body.dark .theme-toggle-wrapper small {
-  color: var(--text-dark);
-}
-
-#themeToggle {
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  padding: 0;
-  width: 32px;
-  height: 32px;
-}
-
-#themeIcon svg {
-  width: 100%;
-  height: 100%;
-}
-
-
-
-#tabs-wrapper {
-  display: flex;
-  align-items: center;
-  gap: 0.1rem;
-  padding: 0 0; /* optional: some side padding */
-  border-bottom: 1px solid var(--separator-color);
-  background-color: var(--bg-primary);
-}
-
-#tabs {
-  flex-grow: 1;
-  display: flex;
-  overflow-x: auto;
-  white-space: nowrap;
-  scrollbar-width: thin;
-  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
-}
-
-/* Optional: Custom scrollbar for webkit browsers */
-#tabs::-webkit-scrollbar {
-  height: 6px;
-}
-#tabs::-webkit-scrollbar-track {
-  background: var(--scrollbar-track);
-}
-#tabs::-webkit-scrollbar-thumb {
-  background-color: var(--scrollbar-thumb);
-  border-radius: 3px;
-}
-
-/* Plus button styles */
-#addTabBtn {
-  flex-shrink: 0;
-  font-size: 1.5rem;
-  padding: 0.48rem 1.2rem;
-  cursor: pointer;
-  background-color: #FFC635;
-  border: none;
-  box-shadow:-1px 0px 13px #7E7E7E;
-  color: var(--btn-text);
-  border-radius: 4px;
-  transition: background-color 0.3s ease;
-}
-body.dark #addTabBtn{
-background-color: #5F76EA;
-box-shadow:-1px 0px 13px #7E7E7E;
-}
-#addTabBtn:hover {
-  background-color: #EDC628;
-}
-
-/* Existing tab button styles should be compatible */
-
-
-
-
-
-
-
-
-/* Celebration */
-.celebration-popup {
-position: fixed; top: 15%; left: 50%; transform: translateX(-50%);
-background: var(--primary); color: white;
-padding: 1rem 1.5rem; border-radius: 12px;
-font-size: 1.1rem; opacity: 0; transition: opacity 0.3s;
-z-index: 200;
-}
-.celebration-popup.show { opacity: 1; }
-#confetti-canvas {
-position: fixed; top:0; left:0; width:100%; height:100%;
-pointer-events: none; z-index: 199;
-}
-
-</style>  
-</head>  <script>  
-if ("serviceWorker" in navigator) {  
-  navigator.serviceWorker.register("./sw.js")  
-    .then(() => console.log("✅ Service Worker registered"))  
-    .catch((err) => console.error("SW registration failed:", err));  
-}  
-</script>  <body>  
-<canvas id="confetti-canvas"></canvas>  <header>    <h1>Day Tracker</h1>  
-  <div class="actions">  
-<div class="theme-toggle-wrapper">
-  <button id="themeToggle" onclick="toggleDarkMode()" aria-label="Toggle Theme">
-    <span id="themeIcon"></span>
-  </button>
-  <small id="themeToggleLabel">Switch to Dark Mode</small>
-</div>
-    <div class="action-btn" onclick="exportData()" title="Export Data">  
-      <span class="material-icons">file_upload</span>  
-      <small>Export</small>  
-    </div>  
-    <div class="action-btn" onclick="importData()" title="Import Data">  
-      <span class="material-icons">file_download</span>  
-      <small>Import</small>  
-    </div>  
-    <div class="action-btn" id="resetBtn" style="display:none;" title="Reset">  
-      <span class="material-icons">restart_alt</span>  
-      <small>Reset</small>  
-    </div>  
-  </div>  
-</header> <div id="tabs-wrapper">
-  <nav id="tabs"></nav>
-  <button id="addTabBtn" class="plus-tab">+</button>
-</div>
-
-<main id="content"></main>  <div class="modal-overlay" id="modalOverlay">  
-
-<div class="modal" id="modalBox">
-  <span class="modal-close" onclick="document.getElementById('modalOverlay').style.display='none'">&times;</span>
-  <h2 id="modalTitle"></h2>
-  <div id="modalBody"></div>
-</div>
-</div>  <div class="celebration-popup" id="celebrationPopup"></div>  <script>  
-
-
+<script>
 function updateDashboardMessageColors() {
-  const container = document.querySelector('#content > div');
+  const container = document.querySelector('#day-container > div');
   if (!container) return;
   
   const isDark = document.body.classList.contains('dark');
@@ -584,7 +2685,7 @@ document.querySelectorAll('.dashboard-card').forEach((card, index) => {
   
   
   
-  
+
 let allTabs = JSON.parse(localStorage.getItem('allTabs')) || { Dashboard: null };    
 let currentTab = localStorage.getItem('currentTab') || 'Dashboard';    
 let completedWeeks = JSON.parse(localStorage.getItem('completedWeeks')) || {};    
@@ -604,6 +2705,138 @@ function toggleDarkMode() {
   updateDashboardMessageColors();
   updateThemeToggleLabel();  
 }  
+  
+  
+  
+  
+  function renderTracker() {
+  const tr = allTabs[currentTab];
+  const c = document.getElementById('day-container');
+  if (!tr || !c) return;
+  c.innerHTML = '';
+  const allDays = tr.weeks.flat();
+  const doneTotal = allDays.filter(d => d.checked).length;
+  const totalDays = allDays.length;
+  const infoDiv = document.createElement('div');
+  infoDiv.style.display='flex'; infoDiv.style.flexDirection='column'; infoDiv.style.alignItems='flex-start'; infoDiv.style.marginBottom='1rem';
+  const startDateLine = document.createElement('div'); startDateLine.style.fontWeight='bold';
+  try {
+    const dateStr = tr.weeks[0][0].label.match(/(.*)/)[1];
+    const [dd, mm, yyyy] = dateStr.split('/');
+    const startDate = new Date(yyyy, mm - 1, dd);
+    startDateLine.textContent = `Start Date: ${startDate.toLocaleDateString('en-GB')}`;
+  } catch (e) { startDateLine.textContent = `Start Date: ${tr.startDate || ''}`; }
+  infoDiv.appendChild(startDateLine);
+  const overallProgressLine = document.createElement('div'); overallProgressLine.textContent = `${doneTotal} / ${totalDays} days completed`; overallProgressLine.style.marginTop='0.5rem'; overallProgressLine.style.fontWeight='bold';
+  infoDiv.appendChild(overallProgressLine);
+  const separator = document.createElement('hr'); separator.style.width='100%'; separator.style.borderColor='#999'; separator.style.margin='0.7rem 0';
+  infoDiv.appendChild(separator);
+  infoDiv.style.color='var(--text-primary)'; overallProgressLine.style.color='var(--text-primary)'; separator.style.borderColor='var(--separator-color)';
+  c.appendChild(infoDiv);
+
+  tr.weeks.forEach((week, wi) => {
+    const title = document.createElement('div'); title.className='week-title'; title.textContent = `Week ${wi+1} – ${tr.topic}`; c.appendChild(title);
+    const done = week.filter(d => d.checked).length; const tot = week.length;
+    const pc = document.createElement('div'); pc.className='progress-container';
+    const pb = document.createElement('div'); pb.className='progress-bar'; pb.style.width = `${Math.round(done / tot * 100)}%`; pc.appendChild(pb); c.appendChild(pc);
+    const prc = document.createElement('div'); prc.style.display='flex'; prc.style.padding='0.3rem 0.8rem'; prc.style.fontWeight='bold'; prc.style.margin='3px'; prc.textContent = `${done} / ${tot} days completed`; pc.after(prc);
+
+    // --- REPLACE the existing week.forEach((day, di) => { ... }) block with this ---
+week.forEach((day, di) => {
+  const safeTab = String(currentTab).replace(/\s+/g, '_');
+  const label = document.createElement('label');
+  label.className = 'checkbox';
+  label.style.display = 'flex';
+  label.style.alignItems = 'center';
+  label.style.width = '95%';
+  label.style.position = 'relative'; // so the badge pseudo-element can position itself
+  // set stable id so updateDayProgress can find it
+  label.id = `day-${safeTab}-${wi}-${di}`;
+  const taskBtn = document.createElement('button');
+
+   //taskBtn.classList.remove('btnjump');
+  
+  
+  const cb = document.createElement('input');
+  
+  cb.type = 'checkbox';
+  cb.checked = !!day.checked;
+  
+  // clicking day checkbox toggles day.checked + mark/unmark all tasks
+  cb.addEventListener('change', () => {
+  // if there are no tasks, prevent checking and notify
+  if (!Array.isArray(day.tasks) || day.tasks.length === 0) {
+  if (cb.checked) {
+    showToast('Add tasks before marking the day complete', 2500, 'warn');
+    
+    // revert checkbox
+    cb.checked = false;
+    
+    // retrigger button jump animation
+    taskBtn.classList.remove('btnjump');
+    void taskBtn.offsetWidth; // force reflow
+    taskBtn.classList.add('btnjump');
+    
+    return;
+  }
+}
+  
+  // existing logic continues...
+  day.checked = !!cb.checked;
+  if (Array.isArray(day.tasks) && day.tasks.length > 0) {
+    day.tasks.forEach(t => { t.done = !!day.checked; });
+  }
+  saveTabs?.();
+  checkCelebrations(allTabs[currentTab]);
+  updateDayProgress(currentTab, wi, di);
+  render();
+});
+  
+  const mark = document.createElement('span');
+  mark.className = 'checkmark';
+  mark.innerHTML = '<svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+  
+  const dayLabel = document.createElement('span');
+  dayLabel.textContent = day.label;
+  dayLabel.style.marginLeft = '8px';
+  dayLabel.style.whiteSpace = 'wrap';
+  dayLabel.style.overflow = 'auto';
+  dayLabel.style.textOverflow = 'ellipsis';
+  
+  const spacer = document.createElement('span');
+  spacer.style.flex = '1';
+  
+
+  
+ // const taskBtn = document.createElement('button');
+// stable id so updateDayProgress can find it later
+taskBtn.id = `taskbtn-${safeTab}-${wi}-${di}`;
+taskBtn.className = 'add-taskpage';
+taskBtn.style.position = 'relative'; // so pseudo-element positions correctly
+taskBtn.style.marginLeft = '10px';
+taskBtn.innerHTML = '<span class="material-icons" style="vertical-align:middle;font-size:18px;">playlist_add</span> Add Tasks';
+taskBtn.onclick = () => openTaskPage(currentTab, wi, di);
+  
+  const totalTasks = (day.tasks || []).length;
+  const doneTasks = (day.tasks || []).filter(t => t.done).length;
+  const summary = document.createElement('span');
+  summary.className="day-fraction";
+  summary.textContent = totalTasks > 0 ? ` (${doneTasks}/${totalTasks} task done)` : ' (0/0 task done)';
+  summary.style.marginLeft = '10px';
+  summary.style.fontSize = '0.9em';
+/*  summary.style.color = '#666';*/
+  
+  label.append(cb, mark, dayLabel, spacer, taskBtn, summary);
+  c.appendChild(label);
+  
+  // initial sync for this day element
+  try { updateDayProgress(currentTab, wi, di); } catch (e) {}
+});
+  });
+}
+
+  
+  
   
   
   
@@ -629,150 +2862,131 @@ updateThemeToggleLabel(); // Call this after setting dark class
   
   
   
-function launchConfetti(intensity) {    
-  const canvas = document.getElementById('confetti-canvas');    
-  const ctx = canvas.getContext('2d');    
-  canvas.width = window.innerWidth;    
-  canvas.height = window.innerHeight;    
-  let particles = [];    
-  for (let i = 0; i < intensity; i++) {    
-    particles.push({    
-      x: Math.random() * canvas.width,    
-      y: Math.random() * canvas.height - canvas.height,    
-      r: Math.random() * 6 + 4,    
-      d: Math.random() * intensity,    
-      color: `hsl(${Math.random()*360}, 100%, 50%)`    
-    });    
-  }    
-  function draw() {    
-    ctx.clearRect(0, 0, canvas.width, canvas.height);    
-    particles.forEach(p => {    
-      ctx.beginPath();    
-      ctx.fillStyle = p.color;    
-      ctx.arc(p.x, p.y, p.r, 0, Math.PI*2, true);    
-      ctx.fill();    
-    });    
-    update();    
-  }    
-  function update() {    
-    particles.forEach(p => {    
-      p.y += Math.cos(p.d) + 1 + p.r/2;    
-      p.x += Math.sin(p.d);    
-      if (p.y > canvas.height) {    
-        p.x = Math.random() * canvas.width;    
-        p.y = -10;    
-      }    
-    });    
-  }    
-  let interval = setInterval(draw, 20);    
-  setTimeout(() => { clearInterval(interval); ctx.clearRect(0,0,canvas.width,canvas.height); }, 4000);    
-}    
-    
-function showCelebrationPopup(message, full=false) {    
-  const pop = document.getElementById('celebrationPopup');    
-  pop.textContent = message;    
-  pop.classList.add('show');    
-  launchConfetti(full ? 200 : 60);    
-  setTimeout(() => pop.classList.remove('show'), 3000);    
-}    
-    
-function checkCelebrations(data) {    
-  // Check each week    
-  data.weeks.forEach((w, i) => {    
-    const key = `${currentTab}-w${i}`;    
-    const isComplete = w.every(d => d.checked);    
-        
-    if (isComplete && !completedWeeks[key]) {    
-      // Mark as complete and celebrate    
-      completedWeeks[key] = true;    
-      saveTabs();    
-      showCelebrationPopup(`Week ${i + 1} complete`, false);    
-    }    
-    else if (!isComplete && completedWeeks[key]) {    
-      // Reset so it can celebrate again    
-      completedWeeks[key] = false;    
-      saveTabs();    
-    }    
-  });    
+function showModal(title, html, onSubmit) {
+  document.getElementById('modalTitle').textContent = title;
+  document.getElementById('modalBody').innerHTML = html;
+  document.getElementById('modalOverlay').style.display = 'flex';
   
-  
-  
-  
-  
-  
-  
-  
-  
-  
-      
-  // Check entire tab completion    
-  const allComplete = data.weeks.every(w => w.every(d => d.checked));    
-  if (allComplete && !completedTabs[currentTab]) {    
-    completedTabs[currentTab] = true;    
-    saveTabs();    
-    showCelebrationPopup(`All done for ${currentTab}!`, true);    
-  }    
-  else if (!allComplete && completedTabs[currentTab]) {    
-    completedTabs[currentTab] = false;    
-    saveTabs();    
-  }    
-}    
-    
-function showModal(title, html, onSubmit) {    
-    
-  document.getElementById('modalTitle').textContent = title;    
-  document.getElementById('modalBody').innerHTML = html;    
-  document.getElementById('modalOverlay').style.display='flex';    
-  const form = document.querySelector('#modalBody form');    
-  if(form) form.onsubmit = e => { e.preventDefault(); onSubmit(new FormData(form)); document.getElementById('modalOverlay').style.display='none'; };    
-}    
+  const form = document.querySelector('#modalBody form');
+  if (form) {
+    form.onsubmit = e => {
+      e.preventDefault();
+      // Pass a function to close modal, so onSubmit can decide when
+      onSubmit(new FormData(form), () => {
+        document.getElementById('modalOverlay').style.display = 'none';
+      });
+    };
+  }
+}
     
 function createTrackerData(fd) {    
   const topic = fd.get('topic');    
   const days = parseInt(fd.get('days'));    
   const start = new Date(fd.get('startDate'));    
   const weeks = [];    
-  let cur=[];    
-  for(let i=0;i<days;i++){    
-    const d=new Date(start);d.setDate(start.getDate()+i);    
-    const lbl=`${d.toLocaleDateString('en-US',{weekday:'long'})} (${d.toLocaleDateString('en-GB')})`;    
-    cur.push({label:lbl,checked:false});    
-    if((i+1)%7===0||i===days-1){weeks.push(cur);cur=[];}    
+  let cur = [];    
+
+  for (let i = 0; i < days; i++) {    
+    const d = new Date(start);    
+    d.setDate(start.getDate() + i);    
+    const lbl = `${d.toLocaleDateString('en-US', {weekday:'long'})} (${d.toLocaleDateString('en-GB')})`;    
+    cur.push({ label: lbl, checked: false, tasks: []});    
+    if ((i + 1) % 7 === 0 || i === days - 1) { weeks.push(cur); cur = []; }    
   }    
-  return {topic,weeks};    
-}    
+
+  return { topic, weeks, days, startDate: start.toISOString().split('T')[0] };    
+}
+const tabsWrapper=document.getElementById('tabs-wrapper');
+  // Dashboard button with tooltip
+const dash = document.createElement('button');
+dash.className = 'dashboardbtn' + (currentTab === 'Dashboard' ? ' active' : '');
+dash.textContent = 'Dashboard';
+dash.onclick = () => {
+  currentTab = 'Dashboard';
+  saveTabs();
+  
+  document.getElementById("taskPage").style.display = "none";
+  document.getElementById("content").style.display = "block";
+  
+  render();
+};
+
+// Add tooltip text as a data attribute
+dash.setAttribute('data-tooltip', 'View Dashboard');
+
+tabsWrapper.insertBefore(dash, tabsWrapper.firstChild);
     
 function renderTabs(){    
   const nav=document.getElementById('tabs');nav.innerHTML='';    
-  const dash=document.createElement('button');dash.className='tab-btn'+(currentTab==='Dashboard'?' active':'');dash.textContent='Dashboard';    
-  dash.onclick=()=>{currentTab='Dashboard';saveTabs();render();};nav.appendChild(dash);    
+  
   Object.keys(allTabs).forEach(tab=>{    
     if(tab==='Dashboard') return;    
-    const btn=document.createElement('button');btn.className='tab-btn'+(currentTab===tab?' active':'');btn.textContent=tab;    
-    btn.onclick=()=>{currentTab=tab;saveTabs();render();};    
-    const close=document.createElement('span');close.className='tab-close';close.textContent='×';    
-    close.onclick=e=>{e.stopPropagation();showModal('Delete Tab', `  
-  <form>  
-    <p>All data will be erased for "${tab}". Are you sure?</p>  
-    <div class="modal-buttons">  
+    const btn=document.createElement('button');btn.className='tab-btn'+(currentTab===tab?' active':'');
+    btn.textContent=tab; 
+ /* const tabcontent=document.createElement('h4');
+  tabcontent.className='tabcontent';
+    tabcontent.style="margin:0;overflow-x:auto;width:50%;";
+    
+    tabcontent.textContent=tab;    
+    
+    btn.appendChild(tabcontent);*/
+    
   
-      <button type="submit">Yes</button>  
-          <button type="button" class="cancel-btn" onclick="document.getElementById('modalOverlay').style.display='none'">Cancel</button>  
-    </div>  
-  </form>  
-`, () => {  
-  delete allTabs[tab];  
-  saveTabs();  
-  if (currentTab === tab) currentTab = 'Dashboard';  
-  render();  
-});};    
-    btn.appendChild(close);nav.appendChild(btn);    
+    btn.onclick = () => {
+  currentTab = tab;
+  saveTabs();
+  
+  // Hide task page when switching tab
+  document.getElementById("taskPage").style.display = "none";
+  document.getElementById("content").style.display = "block";
+  
+  render();
+};   
+    const close=document.createElement('span');close.className='tab-close';close.textContent='×';    
+    close.onclick = e => {
+  e.stopPropagation();
+  showModal('Delete Tab', `
+    <form>
+      <p>All data will be erased for "${tab}". Are you sure?</p>
+      <div class="modal-buttons">
+        <button type="submit">Yes</button>
+        <button type="button" class="cancel-btn" onclick="document.getElementById('modalOverlay').style.display='none'">Cancel</button>
+      </div>
+    </form>
+  `, () => {
+    delete allTabs[tab];
+    saveTabs();
+    if (currentTab === tab) currentTab = 'Dashboard';
+    render();
+    
+    // ✅ Close modal after delete
+    document.getElementById('modalOverlay').style.display = 'none';
+  });
+}; 
+    btn.appendChild(close);
+    nav.style="padding:0 1rem"
+    nav.appendChild(btn);    
   });    
+  
+  
+  
+  // Dashboard button
+
+
+// Wrap with tooltip
+
+
+// Add Tab button (+)
+
+
+// Delete All Tabs button
+
+  
   
 }    
     
 function renderDashboard() {
-  const c = document.getElementById('content');
+  const c = document.getElementById('day-container');
   c.innerHTML = '';
   
   // Filter tabs excluding Dashboard and ensure they exist
@@ -797,7 +3011,24 @@ function renderDashboard() {
   }
   
   // Normal dashboard grid render
-  c.innerHTML = '<div class="dashboard-grid"></div>';
+  c.innerHTML = '<h1 class="dashboardheading" style="border:none;text-align:center;">DASHBOARD</h1><div class="dashboard-grid"></div>';
+  
+  
+  
+  
+  
+  
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
   const grid = c.querySelector('.dashboard-grid');
   
   tabs.forEach((tab, i) => {
@@ -805,7 +3036,11 @@ function renderDashboard() {
       total = tr.weeks.flat().length,
       done = tr.weeks.flat().filter(d => d.checked).length;
     const pct = Math.round(done / total * 100);
+    
     const card = document.createElement('div');
+    
+  
+    
     card.className = 'dashboard-card';
     card.innerHTML = `
       <h3>${tab}</h3>
@@ -821,6 +3056,7 @@ function renderDashboard() {
         <button class="reset-btn" onclick="resetTracker('${tab}')">Reset</button>
       </div>
     `;
+    
     grid.appendChild(card);
     
     setTimeout(() => {
@@ -865,6 +3101,70 @@ function renderDashboard() {
       });
     }, 50);
   });
+  
+  
+  // Add Delete All Tabs button inside dashboard grid
+const existingBtn = document.getElementById('deleteAllTabsBtn');
+if(existingBtn) existingBtn.remove(); // remove old button if exists
+
+if (Object.keys(allTabs).length > 1) { // only show if there are tabs
+  const delBtn = document.createElement('button');
+  delBtn.id = 'deleteAllTabsBtn';
+  delBtn.textContent = 'Delete All Tabs';
+  /*const deleteWrapper = document.createElement('div');
+deleteWrapper.className = 'tooltip';
+delBtn.appendChild(deleteWrapper);
+deleteWrapper.innerHTML += `<span class="tooltip-text">Delete all tabs</span>`;
+  
+  */
+  
+delBtn.setAttribute('data-tooltip', 'Delete all tabs permanently!!');
+  delBtn.style.cssText = `
+    background: #ef4444;
+    color: white;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    margin: 1rem auto;
+    display: block;
+    transition: transform 0.2s, background 0.2s;
+  `;
+  delBtn.onmouseover = () => { delBtn.style.transform = 'scale(1.05)'; delBtn.style.background = '#dc2626'; };
+  delBtn.onmouseout = () => { delBtn.style.transform = 'scale(1)'; delBtn.style.background = '#ef4444'; };
+delBtn.onclick = () => {
+  showModal('Delete All Tabs', `
+    <form>
+      <p>All tabs except Dashboard will be erased. Are you sure?</p>
+      <div class="modal-buttons">
+        <button type="submit">Yes</button>
+        <button type="button" class="cancel-btn" onclick="document.getElementById('modalOverlay').style.display='none'">Cancel</button>
+      </div>
+    </form>
+  `, (fd, closeModal) => { // <-- fd not needed here, closeModal is provided
+    Object.keys(allTabs).forEach(tab => { if (tab !== 'Dashboard') delete allTabs[tab]; });
+    saveTabs();
+    render();
+    closeModal(); // <-- close the modal automatically
+  });
+};
+  
+  const grid = document.querySelector('.dashboard-grid');
+  if(grid) grid.after(delBtn); // place it right below grid
+}
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
 }
     
 function openTab(tab){currentTab=tab;saveTabs();render();}    
@@ -894,7 +3194,7 @@ function resetTracker(tab) {
           delete completedWeeks[key];  
         }  
       });  
-        
+        document.getElementById('modalOverlay').style.display = 'none';
       // 3. Save & re-render  
       saveTabs();  
       render();  
@@ -902,127 +3202,8 @@ function resetTracker(tab) {
   );  
 }  
     
-function renderTracker() {  
-  const tr = allTabs[currentTab];  
-  const c = document.getElementById('content');  
-  c.innerHTML = '';  
-    
-  // Calculate overall done and total days  
-  const allDays = tr.weeks.flat();  
-  const doneTotal = allDays.filter(d => d.checked).length;  
-  const totalDays = allDays.length;  
-    
-  // Create top info container  
-  const infoDiv = document.createElement('div');  
-  infoDiv.style.display = 'flex';  
-  infoDiv.style.flexDirection = 'column';  
-  infoDiv.style.alignItems = 'flex-start';  
-  infoDiv.style.marginBottom = '1rem';  
-  infoDiv.style.color = 'var(--text-light)'; // respects theme colors  
-    
-  // Start date line  
-  const startDateLine = document.createElement('div');  
-  startDateLine.className=''  
-  // Extract date string like "08/08/2025"
-const dateStr = tr.weeks[0][0].label.match(/\((.*)\)/)[1];
-// Split dd/mm/yyyy
-const [dd, mm, yyyy] = dateStr.split('/');
-// Create valid date object
-const startDate = new Date(yyyy, mm - 1, dd);
-startDateLine.textContent = `Start Date: ${startDate.toLocaleDateString('en-GB')}`;
-  startDateLine.style.fontWeight = 'bold';  
-  infoDiv.appendChild(startDateLine);  
-    
-  // Overall completion fraction line  
-  const overallProgressLine = document.createElement('div');  
-  overallProgressLine.textContent = `${doneTotal} / ${totalDays} days completed`;  
-  overallProgressLine.style.marginTop = '0.5rem';  
-  overallProgressLine.style.fontWeight = 'bold';  
-  infoDiv.appendChild(overallProgressLine);  
-    
-  // Separator line  
-  const separator = document.createElement('hr');  
-  separator.style.width = '100%';  
-  separator.style.borderColor = '#999';  
-  separator.style.margin = '0.7rem 0';  
-  infoDiv.appendChild(separator);  
-    
-    
-    
-    
-  infoDiv.style.color = 'var(--text-primary)';  
-  overallProgressLine.style.color = 'var(--text-primary)';  
-separator.style.borderColor = 'var(--separator-color)';  
-  
-    
-c.appendChild(infoDiv);  
-    
-  // Render each week  
-  tr.weeks.forEach((week, wi) => {  
-    const title = document.createElement('div');  
-    title.className = 'week-title';  
-    title.textContent = `Week ${wi + 1} – ${tr.topic}`;  
-    c.appendChild(title);  
-      
-    // Weekly done and total  
-    const done = week.filter(d => d.checked).length;  
-    const tot = week.length;  
-      
-    // Progress bar container  
-    const pc = document.createElement('div');  
-    pc.className = 'progress-container';  
-      
-    // Progress bar  
-    const pb = document.createElement('div');  
-    pb.className = 'progress-bar';  
-    pb.style.width = `${Math.round(done / tot * 100)}%`;  
-    pc.appendChild(pb);  
-    c.appendChild(pc);  
-      
-    // Weekly completion fraction (like 2/7 days)  
-    const prc = document.createElement('div');  
-    prc.style.width = 'auto';  
-    prc.style.height = 'auto';  
-    prc.style.display = 'flex';  
-    prc.style.padding = '0.3rem 0.8rem';  
-    prc.style.alignItems = 'center';  
-    prc.style.justifyContent = 'center';  
-    prc.style.fontWeight = 'bold';  
-    prc.style.margin = '3px';  
-    prc.textContent = `${done} / ${tot} days completed`;  
-    pc.after(prc);  
-      
-      
-      
-      
-    // Render each day checkbox  
-    week.forEach(day => {  
-      const label = document.createElement('label');  
-      label.className = 'checkbox';  
-        
-      const cb = document.createElement('input');  
-      cb.type = 'checkbox';  
-      cb.checked = day.checked;  
-      cb.onchange = () => {
-  if (!day.checked) { // Allow checking only if not already checked
-    day.checked = true;
-    saveTabs();
-    checkCelebrations(tr);
-    render();
-  } else {
-    cb.checked = true; // Prevent unchecking by resetting it to checked
-  }
-};
-        
-      const mark = document.createElement('span');  
-      mark.className = 'checkmark';  
-      mark.innerHTML = '<svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>';  
-        
-      label.append(cb, mark, document.createTextNode(day.label));  
-      c.appendChild(label);  
-    });  
-  });  
-}  
+
+
     
 // Export / Import    
 function exportData(){    
@@ -1056,48 +3237,1786 @@ function importData(){
 }    
     
 // Main render    
-function render(){    
-  renderTabs();    
-  if(currentTab==='Dashboard'){    
-    document.getElementById('resetBtn').style.display='none';    
-    renderDashboard();    
-  } else {    
-    document.getElementById('resetBtn').style='display:flex;flex-direction:column';    
-    document.getElementById('resetBtn').onclick=()=>resetTracker(currentTab);    
-    renderTracker();    
-  }    
-}    
-    
 
+    
+const addTabBtn = document.getElementById('addTabBtn');
+addTabBtn.setAttribute('data-tooltip', 'Add New Tab');
 
 
 // Remove creation of plus button inside renderTabs
 
 // Instead, after renderTabs(), add this event listener once:
 document.getElementById('addTabBtn').onclick = () => {
-  showModal('New Tab', `
-    <form>
+  
+  const modalHTML = `
+    <form id="newTabForm">
+      <!-- Error message container -->
+      <div class="error-msg" style="color:red; margin-bottom:0.5rem;"></div>
+
       <div class="form-group"><input name="tabName" required><label>Tab name</label></div>
       <div class="form-group"><input name="topic" required><label>Topic name</label></div>
-      <div class="form-group"><input type="number" name="days" min="1" required><label>Total days</label></div>
+      <div class="form-group"><input type="number" id="dayinputfield" name="days" min="1" required><label>Total days</label></div>
       <div class="form-group"><input type="date" name="startDate" required><label>Start date</label></div>
+
       <div class="modal-buttons">
         <button type="button" class="cancel-btn" onclick="document.getElementById('modalOverlay').style.display='none'">Cancel</button>
         <button type="submit">Create</button>
       </div>
-    </form>`, fd => {
-    const n = fd.get('tabName');
-    if (allTabs[n]) return alert('Exists');
-    allTabs[n] = createTrackerData(fd);
-    currentTab = n;
+    </form>
+  `;
+  
+  showModal('New Tab', modalHTML, (fd, closeModal) => {
+    const tabName = fd.get('tabName').trim();
+    const topic = fd.get('topic').trim();
+    const nodays = parseInt(fd.get('days'));
+    const startDate = fd.get('startDate');
+    
+    const errorDiv = document.querySelector('#modalOverlay .error-msg');
+    errorDiv.textContent = ''; // clear previous errors
+    
+    // Check duplicate tab name
+    /*if (allTabs[tabName]) {
+      errorDiv.textContent = 'Tab with this name already exists!';
+      return;
+    }*/
+    
+    // Check duplicate topic + days + start date
+    for (let key in allTabs) {
+      const tab = allTabs[key];
+      if (!tab) continue;
+      if (tab.topic === topic && tab.days === nodays && tab.startDate === startDate && allTabs[tabName]) {
+        errorDiv.textContent = 'A tab with the same topic, days and start date already exists!';
+        return;
+      }
+    }
+    
+    // Create the tab
+    allTabs[tabName] = createTrackerData(fd);
+    currentTab = tabName;
     saveTabs();
     render();
+    
+    // Close modal only after successful creation
+    closeModal();
   });
+  
+  // Limit day input to 3 digits after modal is rendered
+  const dayinputfield = document.getElementById('dayinputfield');
+  if (dayinputfield) {
+    dayinputfield.addEventListener('input', () => {
+      if (dayinputfield.value.length > 3) {
+        dayinputfield.value = dayinputfield.value.slice(0, 3);
+      }
+    });
+  }
+};
+function render() {
+  renderTabs();
+  
+  if (currentTab === "Dashboard") {
+    document.getElementById("resetBtn").style.display = "none";
+    renderDashboard();
+  } else {
+    document.getElementById("resetBtn").style =
+      "display:flex;flex-direction:column";
+    document.getElementById("resetBtn").onclick = () =>
+      resetTracker(currentTab);
+    renderTracker();
+  }
+}
+
+// -----------------------------------------------------------------------------
+// From here: openTaskPage -> entire task page & timer subsystem implementation
+// -----------------------------------------------------------------------------
+
+
+/* Open task page for a given tab/week/day */
+function openTaskPage(tab, weekIndex, dayIndex) {
+  const day = allTabs[tab].weeks[weekIndex][dayIndex];
+  window.currentTaskContext = { tab, weekIndex, dayIndex };
+
+  // Hide main content, show task page
+  document.getElementById("content").style.display = "none";
+  const taskPage = document.getElementById("taskPage");
+  taskPage.style.display = "flex";
+
+  // Update title
+  const titleEl = document.getElementById("taskPageTitle");
+  titleEl.textContent = `Tasks for ${day.label}`;
+
+  // Render tasks
+  renderTaskPage(tab, weekIndex, dayIndex);
+
+  // Add new task
+  const addBtn = document.getElementById("taskPageAddBtn");
+  const input = document.getElementById("taskPageInput");
+  addBtn.onclick = () => {
+    const text = input.value.trim();
+    if (!text) return;
+    day.tasks.push({ text, done: false });
+    input.value = "";
+    saveTabs?.();
+    renderTaskPage(tab, weekIndex, dayIndex);
+    render?.();
+  };
+
+  // Back button
+  const backBtn = document.getElementById("taskPageBackBtn");
+  backBtn.onclick = () => {
+    backToMain();
+    history.back();
+  };
+
+  // Push history state so the browser back button works
+  history.pushState({ page: "taskPage" }, "", "");
+}
+
+// Browser back handling
+window.onpopstate = function () {
+  const taskPage = document.getElementById("taskPage");
+  if (taskPage && taskPage.style.display === "flex") {
+    backToMain(); // don't destroy timer state — UI only
+  }
+};
+
+
+/* render() entrypoint (keeps your existing functions) */
+function render() {
+  renderTabs?.();
+
+  if (currentTab === "Dashboard") {
+    document.getElementById("resetBtn").style.display = "none";
+    renderDashboard?.();
+  } else {
+    document.getElementById("resetBtn").style = "display:flex;flex-direction:column";
+    document.getElementById("resetBtn").onclick = () => resetTracker(currentTab);
+    renderTracker?.();
+  }
+}
+
+
+// Limit of concurrently running timers
+const MAX_ACTIVE_TIMERS = 3;
+
+// Count panels with running state (we maintain this class)
+function countActiveTimers() {
+  return document.querySelectorAll(".task-timer-panel.running").length;
+}
+
+/* Try start guard: returns true if allowed.
+   isResume=true bypasses the 3-timer limit (resuming should not be blocked). */
+function tryStartTimer(timerData, isResume = false) {
+  if (isResume) {
+    if (timerData?.panel) timerData.panel.classList.add("running");
+    return true;
+  }
+
+  if (countActiveTimers() >= MAX_ACTIVE_TIMERS) {
+    // warning popup (auto-hide after 5s)
+    showTimeUpPopup("⚠️ Only 3 timers can run at once", "max-timer-warning", null, null, true);
+    return false;
+  }
+
+  if (timerData?.panel) timerData.panel.classList.add("running");
+  return true;
+}
+
+
+// ---------------------------- timeup popups ----------------------------------
+// Global map to avoid duplicates and support stacking
+window.activeTimeUpPopups = window.activeTimeUpPopups || {};
+
+/* Create/Show a Time-Up or Warning popup
+   taskName — text to display (or warning text)
+   id — unique id per popup (for tasks use stable id like `${tab}-${weekIndex}-${dayIndex}-${i}`)
+   onClick — function when popup body clicked (not remove)
+   timerData — associated timerData object (optional)
+   isWarning — true => orange warning, auto-hide after 5s, no remove button
+*/
+// ---------- REPLACE showTimeUpPopup WITH THIS ----------
+function showTimeUpPopup(taskName, id, onClick, timerData, isWarning = false) {
+  if (!window.activeTimeUpPopups) window.activeTimeUpPopups = {};
+  if (window.activeTimeUpPopups[id]) return; // already shown
+  
+  const pop = document.createElement("div");
+  pop.className = "timeup-popup";
+  pop.id = `timeup-${id}`;
+  
+  let metaHTML = "";
+  if (timerData && timerData._meta) {
+    const m = timerData._meta;
+    metaHTML = `<div class="timeup-info">
+      <div class="tab">${escapeHtml(m.tab || "")} — ${escapeHtml(m.dayLabel || "")}</div>
+      <div class="date">${escapeHtml(m.dayLabel ? m.dayLabel : "")}</div>
+      <div class="task">${escapeHtml(taskName)}</div>
+    </div>`;
+  } else {
+    metaHTML = `<div class="timeup-info"><div class="task">${escapeHtml(taskName)}</div></div>`;
+  }
+  
+  // Only show the clickable hint when this is a real time-up (taskData present and not a simple warning)
+  const hintHTML = (!isWarning && timerData) ? `<div class="hint">Click me to go to timer</div>` : "";
+  
+  pop.innerHTML = `
+    ${metaHTML}
+    ${hintHTML}
+    ${isWarning ? "" : `<button class="remove-btn">Remove timer</button>`}
+  `;
+  
+  // stack vertically
+  const existingCount = Object.keys(window.activeTimeUpPopups).length;
+  const topOffset = 20 + existingCount * 72;
+  Object.assign(pop.style, {
+    position: "fixed",
+    top: `${topOffset}px`,
+    left: "50%",
+    transform: "translateX(-50%)",
+    background: isWarning ? "#ffa500" : "#ff4d4f",
+    color: "white",
+    padding: "12px 18px",
+    borderRadius: "8px",
+    zIndex: 99999 + existingCount,
+    display: "flex",
+    gap: "12px",
+    alignItems: "center",
+    minWidth: "320px",
+    boxShadow: "0 6px 24px rgba(0,0,0,0.18)",
+    cursor: "pointer",
+    fontWeight: "700",
+  });
+  
+  document.body.appendChild(pop);
+  window.activeTimeUpPopups[id] = pop;
+  
+  pop.onclick = (e) => {
+    if (e.target.classList.contains("remove-btn")) {
+      removeTimerFromPopup(timerData, id);
+      return;
+    }
+    if (typeof onClick === "function" && !isWarning) onClick();
+  };
+  
+  // auto-hide for warnings
+  if (isWarning) {
+    setTimeout(() => removeTimeUpPopup(id), 4000);
+  }
+}
+
+/* Remove specific popup by id */
+function removeTimeUpPopup(id) {
+  const pop = window.activeTimeUpPopups?.[id];
+  if (!pop) return;
+  pop.remove();
+  delete window.activeTimeUpPopups[id];
+
+  // reposition remaining popups (stack)
+  let idx = 0;
+  for (const key of Object.keys(window.activeTimeUpPopups)) {
+    const el = window.activeTimeUpPopups[key];
+    if (el) {
+      const topOffset = 20 + (idx++) * 72;
+      el.style.top = `${topOffset}px`;
+      el.style.zIndex = 99999 + idx;
+    }
+  }
+}
+
+
+
+
+// ---------------- Small temporary toast (auto-hide) ----------------
+function showToast(msg, duration = 2500, type = 'info') {
+  const id = 'temp-toast';
+  // remove previous
+  const prev = document.getElementById(id);
+  if (prev) prev.remove();
+  
+  const el = document.createElement('div');
+  el.id = id;
+  el.className = 'temp-toast ' + type;
+  el.textContent = msg;
+  document.body.appendChild(el);
+  
+  // position via CSS (see CSS snippet below)
+  setTimeout(() => {
+    el.classList.add('show');
+  }, 8);
+  setTimeout(() => {
+    el.classList.remove('show');
+    setTimeout(() => el.remove(), 300);
+  }, duration);
+}
+
+
+
+
+
+
+/* Remove timer action from popup (same as user clicking cut in timer panel).
+   Should stop audio/animation, reset timerData and update UI/state.
+*/
+function removeTimerFromPopup(timerData, popupId) {
+  // Helper to find meta by scanning allTabs when timerData isn't provided
+  function findMetaFromUid(uid) {
+    try {
+      for (const tabName of Object.keys(allTabs || {})) {
+        const tab = allTabs[tabName];
+        if (!tab || !Array.isArray(tab.weeks)) continue;
+        for (let wi = 0; wi < tab.weeks.length; wi++) {
+          const week = tab.weeks[wi];
+          for (let di = 0; di < week.length; di++) {
+            const day = week[di];
+            if (!Array.isArray(day.tasks)) continue;
+            for (let ti = 0; ti < day.tasks.length; ti++) {
+              const t = day.tasks[ti];
+              if (t && t.timer && (t.timer._uid === uid || `${tabName}-${wi}-${di}-${ti}` === uid)) {
+                return { tab: tabName, weekIndex: wi, dayIndex: di, taskIndex: ti };
+              }
+            }
+          }
+        }
+      }
+    } catch (e) { /* ignore */ }
+    return null;
+  }
+  
+  // If no timerData provided, attempt to find it from uid
+  let meta = timerData && timerData._meta ? timerData._meta : null;
+  if (!meta && popupId) {
+    const found = findMetaFromUid(popupId);
+    if (found) {
+      meta = {
+        tab: found.tab,
+        weekIndex: found.weekIndex,
+        dayIndex: found.dayIndex,
+        taskIndex: found.taskIndex
+      };
+      // try to get timerData reference from allTabs
+      try {
+        const t = allTabs[meta.tab].weeks[meta.weekIndex][meta.dayIndex].tasks[meta.taskIndex];
+        if (t && t.timer) timerData = t.timer;
+      } catch (e) { /* ignore */ }
+    }
+  }
+  
+  // If we still don't have anything, just remove popup DOM and return
+  if (!timerData && !meta) {
+    if (popupId) removeTimeUpPopup(popupId);
+    return;
+  }
+  
+  // cancel RAF if any
+  try { if (timerData.rafId) cancelAnimationFrame(timerData.rafId); } catch (e) {}
+  
+  // stop audio & remove alarm visuals
+  try { stopAlarmIfAny(timerData); } catch (e) {}
+  
+  // reset timerData flags
+  try {
+    timerData.running = false;
+    timerData.remainingMs = 0;
+    timerData.durationMs = 0;
+    timerData.endTime = null;
+    timerData.wasPaused = false;
+    timerData.timeUp = false;
+  } catch (e) {}
+  
+  // remove UI highlights for that task row (if present)
+  try {
+    // if we can find the DOM by uid
+    const taskUid = timerData._uid || popupId;
+    if (taskUid) {
+      const dom = document.querySelector(`[data-task-uid="${taskUid}"]`);
+      if (dom) {
+        const row = dom.querySelector(".task-row");
+        row?.classList?.remove("timeup-highlight");
+        row?.classList?.remove("pulse");
+        row?.classList?.remove("running-glow");
+        const panel = dom.querySelector(".task-timer-panel");
+        panel?.classList?.remove("alarm");
+        panel?.classList?.remove("running");
+      }
+    }
+    
+    // Remove Add-Task button badge (if present)
+    if (meta) {
+      const safeTab = String(meta.tab).replace(/\s+/g, '_');
+      const btnId = `taskbtn-${safeTab}-${meta.weekIndex}-${meta.dayIndex}`;
+      const btn = document.getElementById(btnId);
+      if (btn) {
+        btn.classList.remove('timer-timeup');
+        btn.classList.remove('timer-running');
+      }
+      // fallback: day label
+      const dayBoxId = `day-${safeTab}-${meta.weekIndex}-${meta.dayIndex}`;
+      const dayBox = document.getElementById(dayBoxId);
+      if (dayBox) {
+        dayBox.classList.remove('timer-timeup');
+        dayBox.classList.remove('timer-running');
+      }
+    }
+  } catch (e) { /* ignore DOM errors */ }
+  
+  // Remove popup from the global map & DOM
+  if (timerData && timerData._uid) {
+    try { removeTimeUpPopup(timerData._uid); } catch (e) {}
+    timerData._uid = null;
+  }
+  if (popupId) {
+    try { removeTimeUpPopup(popupId); } catch (e) {}
+  }
+  
+  // persist changes
+  try { saveTabs?.(); } catch (e) {}
+  
+  // Update day-dot via updateDayProgress (critical for dashboard / when not on task page)
+  try {
+    if (meta) {
+      updateDayProgress(meta.tab, meta.weekIndex, meta.dayIndex);
+      // if the user is viewing Dashboard or the same tab, re-render so UI updates
+      if (typeof currentTab !== 'undefined' && (currentTab === 'Dashboard' || currentTab === meta.tab)) {
+        try { render?.(); } catch (e) {}
+      }
+    }
+  } catch (e) {}
+  
+  return;
+}
+
+/* Helper: escapeHtml used in popup building */
+function escapeHtml(str) {
+  if (str === undefined || str === null) return "";
+  return String(str)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+
+// -------------------- global alarm helpers (you already provided similar) ---
+// stopAlarmIfAny(timerData) — stops audio & clears visual alarm
+function stopAlarmIfAny(timerData) {
+  try {
+    if (timerData?.alarmAudio) {
+      timerData.alarmAudio.pause();
+      timerData.alarmAudio.currentTime = 0;
+    }
+  } catch (e) {}
+  if (timerData) {
+    timerData.alarmAudio = null;
+    // remove panel alarm/glow
+    if (timerData.panel) timerData.panel.classList.remove("alarm");
+    // remove ring glow if we can find ring element inside panel
+    try {
+      const fg = timerData.panel?.querySelector?.(".ring-fg");
+      fg?.classList?.remove("ring-glow");
+    } catch (e) {}
+  }
+}
+
+
+// -------------------------- ConfettiManager + Celebrations (drop-in) -------------------------
+(function() {
+  // Ensure there's a confetti canvas in the DOM (auto-create if missing)
+  function ensureCanvas() {
+    let canvas = document.getElementById('confetti-canvas');
+    if (!canvas) {
+      canvas = document.createElement('canvas');
+      canvas.id = 'confetti-canvas';
+      // style to overlay the page and not block clicks
+      canvas.style.position = 'fixed';
+      canvas.style.top = '0';
+      canvas.style.left = '0';
+      canvas.style.width = '100%';
+      canvas.style.height = '100%';
+      canvas.style.pointerEvents = 'none';
+      canvas.style.zIndex = '9999';
+      document.body.appendChild(canvas);
+    }
+    return canvas;
+  }
+  
+  const ConfettiManager = {
+    canvas: null,
+    ctx: null,
+    particles: [],
+    running: false,
+    rafId: null,
+    inited: false,
+    
+    init() {
+      if (this.inited) return;
+      this.canvas = ensureCanvas();
+      this.ctx = this.canvas.getContext('2d');
+      this.resize();
+      // update size on resize
+      window.addEventListener('resize', () => this.resize());
+      this.inited = true;
+    },
+    
+    resize() {
+      if (!this.canvas) return;
+      // match drawing buffer to window device pixels for crispness
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      const dpr = window.devicePixelRatio || 1;
+      this.canvas.width = Math.round(w * dpr);
+      this.canvas.height = Math.round(h * dpr);
+      this.canvas.style.width = `${w}px`;
+      this.canvas.style.height = `${h}px`;
+      this.ctx && this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    },
+    
+    // intensity: number of particles to add
+    // durationMs: how long those particles should live (optional)
+    launch(intensity = 60, durationMs = 4000) {
+      this.init();
+      const now = Date.now();
+      const frames = Math.max(30, Math.round((durationMs / 1000) * 60)); // at least 30 frames
+      for (let i = 0; i < intensity; i++) {
+        this.particles.push({
+          x: Math.random() * this.canvas.width / (window.devicePixelRatio || 1),
+          y: Math.random() * -200, // spawn above viewport
+          r: Math.random() * 6 + 4,
+          d: Math.random() * intensity,
+          color: `hsl(${Math.random() * 360}, 100%, ${40 + Math.random() * 30}%)`,
+          vx: (Math.random() - 0.5) * 2.5,
+          vy: 1 + Math.random() * 3,
+          spin: (Math.random() - 0.5) * 0.3,
+          birth: now,
+          lifeFrames: Math.round(frames * (0.8 + Math.random() * 0.6)) // variation per particle
+        });
+      }
+      if (!this.running) {
+        this.running = true;
+        this.animate();
+      }
+    },
+    
+    animate() {
+      if (!this.running) return;
+      const ctx = this.ctx;
+      const cw = this.canvas.width / (window.devicePixelRatio || 1);
+      const ch = this.canvas.height / (window.devicePixelRatio || 1);
+      
+      // clear
+      ctx.clearRect(0, 0, cw, ch);
+      
+      // iterate backwards for safe splice
+      for (let i = this.particles.length - 1; i >= 0; i--) {
+        const p = this.particles[i];
+        
+        // draw particle (use small rectangle + rotation for variation)
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.spin);
+        ctx.beginPath();
+        ctx.fillStyle = p.color;
+        ctx.fillRect(-p.r / 2, -p.r / 2, p.r, p.r * 0.6);
+        ctx.closePath();
+        ctx.restore();
+        
+        // update physics
+        p.x += p.vx + Math.sin(p.d) * 0.3;
+        p.y += p.vy + Math.cos(p.d) * 0.3;
+        p.spin += 0.01;
+        
+        // decrement life
+        p.lifeFrames--;
+        // remove if off-screen or expired
+        if (p.y > ch + 50 || p.x < -50 || p.x > cw + 50 || p.lifeFrames <= 0) {
+          this.particles.splice(i, 1);
+        }
+      }
+      
+      if (this.particles.length > 0) {
+        this.rafId = requestAnimationFrame(this.animate.bind(this));
+      } else {
+        // stop loop and clear canvas
+        this.running = false;
+        if (this.rafId) cancelAnimationFrame(this.rafId);
+        ctx.clearRect(0, 0, cw, ch);
+      }
+    },
+    
+    clearAll() {
+      this.particles = [];
+      if (this.ctx) {
+        const cw = this.canvas.width / (window.devicePixelRatio || 1);
+        const ch = this.canvas.height / (window.devicePixelRatio || 1);
+        this.ctx.clearRect(0, 0, cw, ch);
+      }
+      if (this.rafId) cancelAnimationFrame(this.rafId);
+      this.running = false;
+    }
+  };
+  
+  // Exported function name to keep compatibility with existing calls
+  // Keep same signature launchConfetti(intensity) but supports optional second arg
+  window.launchConfetti = function(intensity = 60, durationMs = 4000) {
+    // clamp intensity to avoid crazy numbers
+    const safeIntensity = Math.min(Math.max(0 | intensity, 0), 2000);
+    ConfettiManager.launch(safeIntensity, durationMs);
+  };
+  
+  // Keep showCelebrationPopup API identical (message, full=false)
+  window.showCelebrationPopup = function(message, full = false) {
+    // Ensure modal/popup element exists
+    const pop = document.getElementById('celebrationPopup');
+    if (pop) {
+      pop.textContent = message;
+      pop.classList.add('show');
+      // hide after 3s
+      setTimeout(() => pop.classList.remove('show'), 3000);
+    } else {
+      // fallback: brief alert if DOM element missing (non-blocking)
+      console.warn('celebrationPopup element not found; message:', message);
+    }
+    
+    // Use the manager (bigger burst when full)
+    const intensity = full ? 200 : 60;
+    // duration slightly longer for full celebration
+    const duration = full ? 4500 : 3000;
+    launchConfetti(intensity, duration);
+  };
+  
+  // Keep showCelebrationModal API identical
+  window.showCelebrationModal = function(message, full = false) {
+    // Use existing showModal(...) if present
+    try {
+      if (typeof showModal === 'function') {
+        showModal("🎉 Congratulations!", `<p>${message}</p>`, (fd, closeModal) => {
+          // keep behavior identical to your previous code: close immediately
+          closeModal();
+        });
+      } else {
+        // fallback: create a simple modal-like alert if showModal missing
+        console.warn('showModal not found. Using alert fallback for:', message);
+        alert(message);
+      }
+    } catch (err) {
+      console.error('Error invoking showModal:', err);
+    }
+    
+    // Confetti
+    const intensity = full ? 200 : 80;
+    const duration = full ? 5000 : 3500;
+    launchConfetti(intensity, duration);
+  };
+  
+  // Provide a compatible checkCelebrations function that uses the above helpers.
+  // If you already have checkCelebrations defined elsewhere, you can remove this block,
+  // but leaving it here provides a safe, ready-to-use version identical in behavior.
+  window.checkCelebrations = function(data) {
+    // Day-level celebration
+    data.weeks.forEach((week, wi) => {
+      week.forEach((day, di) => {
+        const allTasksDone = day.tasks.length > 0 && day.tasks.every(t => t.done);
+        
+        // Show popup ONLY when completing all tasks, not unchecking
+        if (allTasksDone && !day.celebrated) {
+          day.celebrated = true;
+          try { saveTabs(); } catch (e) { /* ignore if saveTabs missing */ }
+          // small popup
+          showCelebrationPopup(`All tasks done for ${day.label}`, false);
+          // optional extra confetti handled inside showCelebrationPopup
+        }
+        
+        // Reset celebration flag if user unchecks, but do NOT show popup
+        if (!allTasksDone && day.celebrated) {
+          day.celebrated = false;
+          try { saveTabs(); } catch (e) { /* ignore if saveTabs missing */ }
+        }
+      });
+    });
+    
+    // Week-level celebration
+    data.weeks.forEach((week, i) => {
+      const key = `${(typeof currentTab !== 'undefined' ? currentTab : 'tab')}-w${i}`;
+      const isWeekComplete = week.every(day => day.tasks.length === 0 || day.tasks.every(t => t.done));
+      if (isWeekComplete && (typeof completedWeeks === 'object' ? !completedWeeks[key] : true)) {
+        if (typeof completedWeeks === 'object') completedWeeks[key] = true;
+        try { saveTabs(); } catch (e) {}
+        showCelebrationPopup(`Week ${i + 1} complete`, false);
+      } else if (!isWeekComplete && typeof completedWeeks === 'object' && completedWeeks[key]) {
+        completedWeeks[key] = false;
+        try { saveTabs(); } catch (e) {}
+      }
+    });
+    
+    // Full tab completion
+    const allComplete = data.weeks.every(week => week.every(day => day.tasks.length === 0 || day.tasks.every(t => t.done)));
+    if (allComplete && (typeof completedTabs === 'object' ? !completedTabs[(typeof currentTab !== 'undefined' ? currentTab : 'tab')] : true)) {
+      if (typeof completedTabs === 'object') completedTabs[currentTab] = true;
+      try { saveTabs(); } catch (e) {}
+      showCelebrationPopup(`All done for ${currentTab}!`, true);
+    } else if (!allComplete && typeof completedTabs === 'object' && completedTabs[currentTab]) {
+      completedTabs[currentTab] = false;
+      try { saveTabs(); } catch (e) {}
+    }
+  };
+  
+  // expose manager for debugging if needed
+  window._ConfettiManager = ConfettiManager;
+})();   
+      
+
+
+// ----------------------------- renderTaskPage --------------------------------
+function renderTaskPage(tab, weekIndex, dayIndex) {
+  const day = allTabs[tab].weeks[weekIndex][dayIndex];
+  const taskList = document.getElementById("taskList");
+  taskList.innerHTML = "";
+
+  if (!day.tasks || day.tasks.length === 0) {
+    const placeholder = document.createElement("div");
+    placeholder.className = "task-placeholder";
+placeholder.textContent=
+"No tasks yet,name the task and Click the + button to add a new task.";
+    taskList.appendChild(placeholder);
+    return;
+  }
+
+// --- REPLACE the existing single-use outside click handler with this improved one ---
+if (!window._taskOptionsCloseHandlerAdded) {
+  window._taskOptionsCloseHandlerAdded = true;
+  
+  document.addEventListener("click", (e) => {
+    document.querySelectorAll(".task-options-menu").forEach(menu => {
+      const btn = menu._openerBtn || menu.previousElementSibling;
+      // if click is outside both the menu and its opener button => hide + restore location
+      if (!menu.contains(e.target) && !(btn && btn.contains(e.target))) {
+        // hide menu
+        menu.style.display = "none";
+      
+        menu.setAttribute("aria-hidden", "true");
+        if (btn) btn.setAttribute("aria-expanded", "false");
+        
+        // if we moved this menu to body, move it back to its original parent
+        if (menu._moved) {
+          try {
+            if (menu._origParent) {
+              menu._origParent.insertBefore(menu, menu._origNextSibling || null);
+            }
+          } catch (err) { /* ignore */ }
+          menu._moved = false;
+          // restore inline styles we changed
+          menu.style.position = menu._origPosition || "";
+          menu.style.left = menu._origLeft || "";
+          menu.style.top = menu._origTop || "";
+          menu.style.zIndex = menu._origZ || "";
+          menu.style.visibility = menu._origVisibility || "";
+        } else {
+          // restore saved zIndex if present
+          if (menu._origZ !== undefined) menu.style.zIndex = menu._origZ;
+        }
+      }
+    });
+  });
+}
+
+  day.tasks.forEach((task, i) => {
+    const item = document.createElement("div");
+    item.className = "task-item task-container";
+    // attach stable uid for DOM queries
+    const taskUid = `${tab}-${weekIndex}-${dayIndex}-${i}`;
+    item.setAttribute("data-task-uid", taskUid);
+
+    item.innerHTML = `
+      <div class="task-row">
+        <label class="task-checkbox">
+          <input type="checkbox" ${task.done ? "checked" : ""}>
+          <span class="checkmark"></span>
+          <span class="task-text">${escapeHtml(task.text)}</span>
+        </label>
+
+        <button class="task-options-btn" aria-label="Task options" aria-expanded="false">⋮</button>
+        <div class="task-options-menu" style="display:none;">
+          <button class="edit-task-btn">Edit</button>
+          <button class="delete-task-btn">Delete</button>
+          <button class="timer-task-btn">Timer</button>
+        </div>
+      </div>
+
+      <button class="timer-toggle-btn" style="display:none">▲ Hide Timer</button>
+
+      <div class="task-timer-panel" aria-hidden="true">
+        <div class="timer-header">
+          <div class="timer-clock-left">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 7v6l4 2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
+              <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.2" fill="none" />
+            </svg>
+            <span class="timer-label-text">Timer</span>
+          </div>
+          <button class="cut-timer-btn" title="Close & reset timer">✕</button>
+        </div>
+
+        <div class="timer-ring" aria-hidden="false">
+          <svg viewBox="0 0 100 100" class="timer-ring-svg" role="img" aria-label="timer progress">
+            <circle class="ring-bg" cx="50" cy="50" r="36"></circle>
+            <circle class="ring-fg" cx="50" cy="50" r="36" stroke-dasharray="0" stroke-dashoffset="0"></circle>
+          </svg>
+          <div class="ring-label">00:00:00</div>
+        </div>
+
+        <div class="task-timer-display" style="display:none;">00:00:00</div>
+
+        <div class="task-timer-inputs">
+          <input type="number" min="0" class="hours" placeholder="HH">
+          <input type="number" min="0" class="minutes" placeholder="MM">
+          <input type="number" min="0" class="seconds" placeholder="SS">
+        </div>
+
+        <div class="task-timer-buttons">
+          <button class="start-btn">Start</button>
+          <button class="add1-btn">+1 min</button>
+          <button class="reset-btn" style="display:none;">Reset</button>
+        </div>
+      </div>
+    `;
+
+    // scoped elements
+    const container = item;
+    const checkbox = container.querySelector(".task-checkbox input");
+    const optionsBtn = container.querySelector(".task-options-btn");
+    const optionsMenu = container.querySelector(".task-options-menu");
+    const editBtn = container.querySelector(".edit-task-btn");
+    const deleteBtn = container.querySelector(".delete-task-btn");
+    const timerMenuBtn = container.querySelector(".timer-task-btn");
+
+    const toggleBtn = container.querySelector(".timer-toggle-btn");
+    const panel = container.querySelector(".task-timer-panel");
+
+    const ringLabel = container.querySelector(".ring-label");
+    const ringFg = container.querySelector(".ring-fg");
+
+    const hoursInput = container.querySelector(".hours");
+    const minutesInput = container.querySelector(".minutes");
+    const secondsInput = container.querySelector(".seconds");
+    const startBtn = container.querySelector(".start-btn");
+    const add1Btn = container.querySelector(".add1-btn");
+    const resetBtn = container.querySelector(".reset-btn");
+    const cutBtn = container.querySelector(".cut-timer-btn");
+
+
+
+checkbox.onchange = () => {
+  // update task status
+  task.done = checkbox.checked;
+  
+  // update the day checked state based on all tasks
+  try {
+    const dayRef = allTabs[tab].weeks[weekIndex][dayIndex];
+    const total = (dayRef.tasks || []).length;
+    const doneCount = (dayRef.tasks || []).filter(t => t.done).length;
+    // if every task done and there is at least one task => mark day checked
+    dayRef.checked = (total > 0 && doneCount === total);
+  } catch (e) {
+    // ignore
+  }
+  
+  saveTabs?.(); // persist
+  updateDayProgress(tab, weekIndex, dayIndex); // update main-day checkbox + progress
+  checkCelebrations(allTabs[tab]); // trigger celebrations if needed
+  render(); // reflect everywhere
 };
 
 
 
-// Start app    
-render();
-</script>  </body>  
-</html>  
+
+
+
+    // make sure task.timer exists
+    if (!task.timer) {
+      task.timer = {
+        durationMs: 0,
+        remainingMs: 0,
+        running: false,
+        endTime: null,
+        rafId: null,
+        alarmAudio: null,
+        wasPaused: false,
+        panel: null,
+        timeUp: false // persistent flag for time up
+      };
+    }
+    const timerData = task.timer;
+
+    // attach small metadata to timerData so popups can navigate to it
+    timerData._uid = taskUid;
+    timerData._meta = { tab, weekIndex, dayIndex, taskIndex: i, dayLabel: day.label };
+    timerData.panel = panel;
+
+    // ring constants
+    const R = 36;
+    const C = 2 * Math.PI * R;
+
+    if (ringFg) {
+      ringFg.setAttribute("stroke-dasharray", String(C));
+      // When not active, offset at full circumference (empty). When fraction=1 => offset=0
+      ringFg.setAttribute("stroke-dashoffset", String(C));
+      ringFg.setAttribute("transform", "rotate(-90 50 50)");
+      ringFg.style.opacity = 0; // invisible initially
+    }
+    function showRing() { if (ringFg) ringFg.style.opacity = 1; }
+    function hideRing() { if (ringFg) ringFg.style.opacity = 0; }
+
+    function fmtMs(ms) {
+      const tot = Math.max(0, Math.ceil(ms / 1000));
+      const h = Math.floor(tot / 3600);
+      const m = Math.floor((tot % 3600) / 60);
+      const s = tot % 60;
+      return `${String(h).padStart(2,"0")}:${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`;
+    }
+
+    function getRemainingMs() {
+      if (timerData.running && timerData.endTime) return Math.max(0, timerData.endTime - Date.now());
+      return Math.max(0, timerData.remainingMs || 0);
+    }
+
+    function updateDisplayFromMs(ms) {
+      if (ringLabel) ringLabel.textContent = fmtMs(ms);
+      if (ringFg) {
+        const fraction = (timerData.durationMs > 0) ?
+          Math.max(0, Math.min(1, ms / timerData.durationMs)) :
+          1;
+        ringFg.setAttribute("stroke-dasharray", String(C));
+        ringFg.setAttribute("stroke-dashoffset", String(C * (1 - fraction)));
+      }
+    }
+
+    function showInputs(){ container.querySelector(".task-timer-inputs").style.display = "flex"; }
+    function hideInputs(){ container.querySelector(".task-timer-inputs").style.display = "none"; }
+
+    // Stop alarm and clear alarm visuals for this timer
+    function startAlarm() {
+      try {
+        const audio = new Audio("https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3");
+        audio.loop = true;
+        audio.play().catch(()=>{});
+        timerData.alarmAudio = audio;
+      } catch (e) { timerData.alarmAudio = null; }
+      if (panel) panel.classList.add("alarm");
+      if (ringFg) ringFg.classList.add("ring-glow");
+
+      // mark persistent timeUp flag
+      timerData.timeUp = true;
+      saveTabs?.();
+
+      // highlight the task-row visually (persist until removed)
+      const row = container.querySelector(".task-row");
+      row?.classList.add("timeup-highlight");
+      row?.classList.add("pulse");
+      // ensure options menu will appear above glow:
+      optionsMenu._origZ = optionsMenu.style.zIndex || "";
+    }
+
+    // stopAlarmIfAny (use global version for this timer)
+    function localStopAlarm() { stopAlarmIfAny(timerData); }
+
+    // initial UI sync
+    if (timerData.remainingMs === undefined || timerData.remainingMs === null) timerData.remainingMs = timerData.durationMs || 0;
+    // If timeUp persisted, add highlight
+    if (timerData.timeUp) {
+      const row = container.querySelector(".task-row");
+      row?.classList.add("timeup-highlight");
+      row?.classList.add("pulse");
+    }
+
+    updateDisplayFromMs(getRemainingMs());
+    startBtn.textContent = timerData.running ? "Pause" : (timerData.wasPaused ? "Resume" : "Start");
+    toggleBtn.style.display = "none";
+    add1Btn.style.display = timerData.durationMs > 0 || timerData.remainingMs > 0 || timerData.timeUp ? "inline-block" : "none";
+    resetBtn.style.display = (timerData.durationMs > 0 || timerData.timeUp) ? "inline-block" : "none";
+
+    // ticker for smooth updates
+    function tickerLoop() {
+      timerData.rafId = requestAnimationFrame(() => {
+        const remMs = getRemainingMs();
+        updateDisplayFromMs(remMs);
+
+        if (remMs <= 0) {
+  if (timerData.rafId) { cancelAnimationFrame(timerData.rafId); timerData.rafId = null; }
+
+  // move to alarm state
+  timerData.running = false;
+  timerData.endTime = null;
+  timerData.remainingMs = 0;
+  timerData.wasPaused = false;
+
+  if (panel) panel.classList.add("alarm");
+  if (startBtn) startBtn.style.display = "none";
+  if (resetBtn) resetBtn.style.display = "inline-block";
+  if (add1Btn) add1Btn.style.display = "inline-block";
+
+  // start alarm visuals/audio and mark timeUp
+  startAlarm(); // this sets timerData.timeUp = true and adds .timeup-highlight
+
+  // ensure panel not counted as running
+  panel?.classList?.remove("running");
+
+  // persist state
+  saveTabs?.();
+
+  // ensure we have a stable uid for this timer's popup (same scheme used elsewhere)
+  const taskUniqueId = `${tab}-${weekIndex}-${dayIndex}-${i}`;
+  timerData._uid = taskUniqueId;
+
+  // Show persistent time-up popup (unique per task)
+  showTimeUpPopup(task.text, taskUniqueId, () => {
+    // On popup click — open the corresponding task page and focus it
+    focusTask(timerData);
+  }, timerData, false);
+
+  // --- CRITICAL: update the day-level badge so it turns red even when task page isn't open
+  try { updateDayProgress(tab, weekIndex, dayIndex); } catch (e) { /* ignore */ }
+
+  // If dashboard or this tab is currently visible, re-render to ensure UI updates everywhere.
+  try {
+    if (typeof currentTab !== 'undefined' && (currentTab === tab || currentTab === 'Dashboard')) {
+      render?.();
+    }
+  } catch (e) { /* ignore */ }
+
+  return;
+}
+        tickerLoop();
+      });
+    }
+
+    // options dropdown toggle (ensure dropdown z-index is high)
+    // --- REPLACE the existing optionsBtn click handler with this ---
+// ---------- options button: move menu to body while open (updated) ----------
+// ---------- Floating options menu (drop-in replacement) ----------
+optionsBtn.addEventListener("click", (ev) => {
+  ev.stopPropagation();
+  
+  const isOpen = optionsMenu.style.display === "block";
+  
+  // Helper to restore a moved menu back to original place & remove attached listeners
+  function closeFloatingMenu(menu) {
+    if (!menu || !menu._moved) return;
+    
+    // hide first to avoid flicker while restoring
+    menu.style.display = "none";
+    menu.setAttribute("aria-hidden", "true");
+    
+    // remove attached listeners (if present)
+    try {
+      if (menu._closeOnScroll) {
+        window.removeEventListener("scroll", menu._closeOnScroll, true);
+        window.removeEventListener("touchmove", menu._closeOnScroll, true);
+      }
+      if (menu._closeOnDocClick) {
+        document.removeEventListener("click", menu._closeOnDocClick, true);
+      }
+      if (menu._internalClickHandler) {
+        menu.removeEventListener("click", menu._internalClickHandler, true);
+      }
+    } catch (e) { /* ignore */ }
+    
+    // restore in DOM if moved
+    if (menu._origParent) {
+      try { menu._origParent.insertBefore(menu, menu._origNextSibling || null); } catch (e) {}
+    }
+    // restore style snapshot
+    menu._moved = false;
+    menu.style.position = menu._origPosition || "";
+    menu.style.left = menu._origLeft || "";
+    menu.style.top = menu._origTop || "";
+    menu.style.zIndex = menu._origZ || "";
+    menu.style.visibility = menu._origVisibility || "";
+    
+    // restore opener button aria
+    if (menu._openerBtn) menu._openerBtn.setAttribute("aria-expanded", "false");
+  }
+  
+  // close and restore all other menus
+  document.querySelectorAll(".task-options-menu").forEach(m => {
+    if (m !== optionsMenu) {
+      closeFloatingMenu(m);
+    }
+  });
+  document.querySelectorAll(".task-options-btn").forEach(b => b.setAttribute("aria-expanded", "false"));
+  
+  if (isOpen) {
+    // close this menu and restore
+    closeFloatingMenu(optionsMenu);
+    return;
+  }
+  
+  // OPEN: move menu to body so it floats above glow/other items
+  optionsMenu._origParent = optionsMenu.parentElement;
+  optionsMenu._origNextSibling = optionsMenu.nextSibling;
+  optionsMenu._origPosition = optionsMenu.style.position || "";
+  optionsMenu._origZ = optionsMenu.style.zIndex || "";
+  optionsMenu._origLeft = optionsMenu.style.left || "";
+  optionsMenu._origTop = optionsMenu.style.top || "";
+  optionsMenu._origVisibility = optionsMenu.style.visibility || "";
+  
+  // append to body
+  document.body.appendChild(optionsMenu);
+  optionsMenu.style.position = 'fixed';
+  
+  // enforce narrower width for the floating menu (CSS max-width + inline clamp)
+  optionsMenu.style.maxWidth = '220px';
+  optionsMenu.style.width = 'auto';
+  
+  // measure while invisible to prevent FOUC
+  optionsMenu.style.visibility = 'hidden';
+  optionsMenu.style.display = 'block';
+  
+  const rect = optionsBtn.getBoundingClientRect();
+  const menuW = optionsMenu.offsetWidth;
+  const menuH = optionsMenu.offsetHeight;
+  
+  // right-align by default (but keep in viewport)
+  let left = rect.right - menuW;
+  if (left < 8) left = Math.max(8, rect.left);
+  
+  // prefer positioning below opener; keep inside viewport vertically
+  let top = Math.min(rect.bottom + 8, window.innerHeight - menuH - 8);
+  if (top < 8) top = rect.top + 8;
+  
+  optionsMenu.style.left = Math.round(left) + 'px';
+  optionsMenu.style.top = Math.round(top) + 'px';
+  optionsMenu.style.zIndex = '2147483647';
+  optionsMenu.style.visibility = 'visible';
+  optionsMenu._moved = true;
+  optionsMenu._openerBtn = optionsBtn;
+  
+  optionsBtn.setAttribute("aria-expanded", "true");
+  optionsMenu.setAttribute("aria-hidden", "false");
+  
+  // --- Attach close handlers while the floating menu is open ---
+  // 1) Close on scroll or touchmove (capture phase to detect scrolling inside any container)
+  optionsMenu._closeOnScroll = function(e) {
+    // if the scroll/touch happens, close the floating menu
+    closeFloatingMenu(optionsMenu);
+  };
+  window.addEventListener("scroll", optionsMenu._closeOnScroll, true);
+  window.addEventListener("touchmove", optionsMenu._closeOnScroll, true);
+  
+  // 2) Close on clicking outside OR when clicking any button inside the menu
+  optionsMenu._closeOnDocClick = function(e) {
+    // If click is outside the menu and not the opener -> close
+    if (!optionsMenu.contains(e.target) && e.target !== optionsBtn) {
+      closeFloatingMenu(optionsMenu);
+      return;
+    }
+    // If click is on a button inside the menu -> close after letting the click proceed to handler
+    const btn = e.target.closest('button, [role="button"], a');
+    if (btn && optionsMenu.contains(btn)) {
+      // schedule close after current call stack so the clicked handler runs first
+      setTimeout(() => closeFloatingMenu(optionsMenu), 10);
+    }
+  };
+  document.addEventListener("click", optionsMenu._closeOnDocClick, true);
+  
+  // 3) Also attach a direct click listener inside the menu (capture) to immediately close on a button-type click
+  optionsMenu._internalClickHandler = function(e) {
+    const btn = e.target.closest('button, [role="button"], a');
+    if (btn) {
+      // let the action run then close
+      setTimeout(() => closeFloatingMenu(optionsMenu), 10);
+    }
+  };
+  optionsMenu.addEventListener("click", optionsMenu._internalClickHandler, true);
+});
+    // edit
+    editBtn.onclick = () => {
+      if (typeof showModal !== "function") return;
+      showModal("Edit Task", `
+        <form>
+          <input type="text" name="taskText" value="${escapeHtml(task.text)}" style="width:100%; padding:6px;" required>
+          <button type="submit" style="margin-top:10px;">Save</button>
+        </form>
+      `, (formData, closeModal) => {
+        const newText = formData.get("taskText").trim();
+        if (newText) {
+          task.text = newText;
+          saveTabs?.();
+          renderTaskPage(tab, weekIndex, dayIndex);
+          closeModal();
+        }
+      });
+    };
+
+    // delete
+    deleteBtn.onclick = () => {
+      if (typeof showModal !== "function") return;
+      showModal("Delete Task", `
+        <p>Are you sure you want to delete this task?</p>
+        <form><button type="submit" style="background:red;color:white;padding:6px 12px;">Delete</button></form>
+      `, (formData, closeModal) => {
+        // Clean up any existing popup for this timer
+        if (task.timer && task.timer._uid) removeTimeUpPopup(task.timer._uid);
+
+        day.tasks.splice(i, 1);
+        saveTabs?.();
+        renderTaskPage(tab, weekIndex, dayIndex);
+        closeModal();
+      });
+    };
+
+    // open panel from menu
+    timerMenuBtn.onclick = (ev) => {
+      ev.stopPropagation();
+      optionsMenu.style.display = "none";
+      panel.classList.add("show");
+      panel.setAttribute("aria-hidden", "false");
+      toggleBtn.style.display = "block";
+      toggleBtn.textContent = "▲ Hide Timer";
+
+      // Only show inputs if timer hasn't started yet (no duration set)
+      if (!timerData.running && (timerData.durationMs === 0 || timerData.remainingMs === timerData.durationMs)) {
+        showInputs();
+      } else {
+        hideInputs();
+      }
+
+      updateDisplayFromMs(getRemainingMs());
+    };
+
+    // toggle handler
+    toggleBtn.onclick = () => {
+      if (!panel) return;
+      if (panel.classList.contains("show")) {
+        panel.classList.remove("show");
+        panel.setAttribute("aria-hidden", "true");
+        toggleBtn.textContent = "▼ Show Timer";
+      } else {
+        panel.classList.add("show");
+        panel.setAttribute("aria-hidden", "false");
+        toggleBtn.textContent = "▲ Hide Timer";
+      }
+    };
+
+    // cut: reset & hide toggle (full reset) - use same logic as popup remove
+   function cutTimer() {
+  hideRing();
+  if (timerData.rafId) { cancelAnimationFrame(timerData.rafId); timerData.rafId = null; }
+  stopAlarmIfAny(timerData);
+
+  timerData.running = false;
+  timerData.remainingMs = 0;
+  timerData.durationMs = 0;
+  timerData.endTime = null;
+  timerData.wasPaused = false;
+  timerData.timeUp = false;
+
+  // clear inputs
+  if (hoursInput) hoursInput.value = "";
+  if (minutesInput) minutesInput.value = "";
+  if (secondsInput) secondsInput.value = "";
+
+  updateDisplayFromMs(0);
+  panel.classList.remove("show", "alarm");
+  panel.setAttribute("aria-hidden", "true");
+  toggleBtn.style.display = "none";
+  toggleBtn.textContent = "▲ Hide Timer";
+
+  // reset UI buttons
+  startBtn.style.display = "inline-block";
+  startBtn.textContent = "Start";
+  add1Btn.style.display = "none";
+  resetBtn.style.display = "none";
+  showInputs();
+
+  // remove highlight (running or timeup)
+  const row = container.querySelector(".task-row");
+  row?.classList.remove("timeup-highlight");
+  row?.classList.remove("pulse");
+  row?.classList.remove("running-glow");
+
+  // ensure panel not counted as running
+  if (panel) panel.classList.remove("running");
+
+  // Remove associated timeup popup if present and clear uid
+  if (timerData._uid) {
+    removeTimeUpPopup(timerData._uid);
+    timerData._uid = null;
+  }
+
+  // update day-dot state (green/red) after cutting this timer
+  try { updateDayProgress(tab, weekIndex, dayIndex); } catch (e) {}
+
+  saveTabs?.();
+}
+
+    cutBtn.onclick = () => cutTimer();
+
+    // START / PAUSE / RESUME
+startBtn.onclick = () => {
+  stopAlarmIfAny(timerData); // if ringing, stop before starting/resuming
+
+  // RESUME case (was paused)
+  if (!timerData.running && timerData.wasPaused && timerData.remainingMs > 0) {
+    // Resume should not be blocked by MAX limit, so pass isResume=true
+    if (!tryStartTimer(timerData, true)) return;
+    timerData.endTime = Date.now() + timerData.remainingMs;
+    timerData.running = true;
+    timerData.wasPaused = false;
+    startBtn.textContent = "Pause";
+    add1Btn.style.display = "inline-block";
+    resetBtn.style.display = "inline-block";
+    hideInputs();
+    if (timerData.rafId) { cancelAnimationFrame(timerData.rafId); timerData.rafId = null; }
+    showRing();
+    setTimeout(tickerLoop, 5);
+    saveTabs?.();
+    return;
+  }
+
+  // NEW START
+  if (!timerData.running) {
+    // compute input total first WITHOUT mutating timerData
+    const anyInput = (hoursInput?.value !== "") || (minutesInput?.value !== "") || (secondsInput?.value !== "");
+    let totalMs = 0;
+    if (anyInput) {
+      const h = parseInt(hoursInput.value) || 0, m = parseInt(minutesInput.value) || 0, s = parseInt(secondsInput.value) || 0;
+      totalMs = (h * 3600 + m * 60 + s) * 1000;
+      if (totalMs <= 0) return; // invalid -> do nothing
+    } else if (!(timerData.remainingMs > 0)) {
+      // nothing to start
+      return;
+    } else {
+      totalMs = timerData.remainingMs || 0;
+    }
+
+    // Check limit BEFORE writing state; tryStartTimer handles UI class add for running
+    if (!tryStartTimer(timerData, false)) {
+      // START DENIED: do nothing (do NOT show ring or remaining time)
+      return;
+    }
+
+    // now commit to timerData (start permitted)
+    if (anyInput) {
+      timerData.durationMs = totalMs;
+      timerData.remainingMs = totalMs;
+    } else {
+      // if no new input and we had remainingMs stored, keep it
+      timerData.durationMs = timerData.durationMs || timerData.remainingMs || 0;
+      timerData.remainingMs = timerData.remainingMs || 0;
+    }
+
+    showRing();
+    timerData.endTime = Date.now() + timerData.remainingMs;
+    timerData.running = true;
+    timerData.wasPaused = false;
+    updateDisplayFromMs(timerData.remainingMs);
+    startBtn.textContent = "Pause";
+    add1Btn.style.display = "inline-block";
+    resetBtn.style.display = "inline-block";
+    hideInputs();
+    if (timerData.rafId) { cancelAnimationFrame(timerData.rafId); timerData.rafId = null; }
+    setTimeout(tickerLoop, 5);
+    saveTabs?.();
+  } else {
+    // PAUSE running timer
+    timerData.running = false;
+    timerData.wasPaused = true;
+    if (timerData.endTime) timerData.remainingMs = Math.max(0, timerData.endTime - Date.now());
+    timerData.endTime = null;
+    if (timerData.rafId) { cancelAnimationFrame(timerData.rafId); timerData.rafId = null; }
+    startBtn.textContent = "Resume";
+    add1Btn.style.display = "inline-block";
+    resetBtn.style.display = "inline-block";
+    // remove running class
+    if (panel) panel.classList.remove("running");
+    saveTabs?.();
+  }
+};
+
+    // Reset (user)
+    resetBtn.onclick = () => {
+  hideRing();
+  if (timerData.rafId) { cancelAnimationFrame(timerData.rafId); timerData.rafId = null; }
+  stopAlarmIfAny(timerData);
+
+  timerData.running = false;
+  timerData.remainingMs = 0; // reset
+  timerData.durationMs = 0;
+  timerData.endTime = null;
+  timerData.wasPaused = false;
+  timerData.timeUp = false;
+
+  // clear inputs
+  if (hoursInput) hoursInput.value = "";
+  if (minutesInput) minutesInput.value = "";
+  if (secondsInput) secondsInput.value = "";
+
+  startBtn.textContent = "Start";
+  startBtn.style.display = "inline-block";
+  add1Btn.style.display = "none";
+  resetBtn.style.display = "none";
+  panel.classList.remove("alarm");
+  showInputs();
+
+  // remove highlight and running glow, and associated popup
+  const row = container.querySelector(".task-row");
+  row?.classList.remove("timeup-highlight");
+  row?.classList.remove("pulse");
+  row?.classList.remove("running-glow");
+
+  if (panel) panel.classList.remove("running");
+
+  if (timerData._uid) {
+    removeTimeUpPopup(timerData._uid);
+    timerData._uid = null;
+  }
+
+  updateDisplayFromMs(0);
+
+  // re-evaluate day dot
+  try { updateDayProgress(tab, weekIndex, dayIndex); } catch (e) {}
+
+  saveTabs?.();
+};
+
+    // +1 minute button
+    // +1 minute (robustly clear timeup then add)
+add1Btn.onclick = () => {
+  stopAlarmIfAny(timerData);
+  panel.classList.remove("alarm");
+
+  const addedMs = 60 * 1000;
+  const baseRemaining = timerData.running && timerData.endTime ? Math.max(0, timerData.endTime - Date.now()) : (timerData.remainingMs || 0);
+  const newRemaining = baseRemaining + addedMs;
+
+  // If not running, we will attempt to start it now (helps user resume/extend a paused or timeup timer)
+  if (!timerData.running) {
+    // Check limit before starting
+    if (!tryStartTimer(timerData, false)) {
+      // Denied due to max active timers — do NOT show ring or remaining time
+      // Just update internal remaining value (but do not start or show UI)
+      timerData.remainingMs = newRemaining;
+      // Do NOT call showRing() or updateDisplayFromMs() here
+      saveTabs?.();
+      return;
+    }
+
+    // start it
+    timerData.remainingMs = newRemaining;
+    timerData.durationMs = Math.max(timerData.durationMs || 0, timerData.remainingMs);
+    timerData.endTime = Date.now() + timerData.remainingMs;
+    timerData.running = true;
+    timerData.wasPaused = false;
+    panel.classList.add("running");
+    startBtn.textContent = "Pause";
+    resetBtn.style.display = "inline-block";
+    hideInputs();
+    showRing();
+    if (timerData.rafId) { cancelAnimationFrame(timerData.rafId); timerData.rafId = null; }
+    setTimeout(tickerLoop, 5);
+    saveTabs?.();
+  } else {
+    // If already running -> extend end time
+    timerData.remainingMs = newRemaining;
+    timerData.durationMs = Math.max(timerData.durationMs || 0, timerData.remainingMs);
+    timerData.endTime = Date.now() + timerData.remainingMs;
+    updateDisplayFromMs(timerData.remainingMs);
+    showRing();
+    saveTabs?.();
+  }
+};
+
+    taskList.appendChild(item);
+
+// ------------------- auto-sync timer state when rendering ------------------
+// Normalize flags and compute "active" (set but not timeUp) vs timeUp
+const isActiveTimer = (timerData.durationMs > 0 || (timerData.remainingMs > 0)) && !timerData.timeUp;
+
+if (timerData.running) {
+  // recompute remaining
+  timerData.remainingMs = Math.max(0, (timerData.endTime || 0) - Date.now());
+  updateDisplayFromMs(timerData.remainingMs);
+  showRing();
+  
+  // add running class
+  panel.classList.add("running");
+  
+  if (timerData.rafId) cancelAnimationFrame(timerData.rafId);
+  setTimeout(tickerLoop, 5);
+  
+  startBtn.textContent = "Pause";
+  add1Btn.style.display = "inline-block";
+  resetBtn.style.display = "inline-block";
+  hideInputs();
+  
+  // show quick toggle so user can jump to panel
+  toggleBtn.style.display = "block";
+  toggleBtn.textContent = "▼ show Timer";
+  
+  // add a visible green/blue glow on the task row (non-timeUp)
+  const row = container.querySelector(".task-row");
+  row?.classList.add("running-glow");
+  // remove any previous red timeup highlight just in case
+  row?.classList.remove("timeup-highlight");
+  row?.classList.remove("pulse");
+} else if (timerData.wasPaused && timerData.remainingMs > 0) {
+  updateDisplayFromMs(timerData.remainingMs);
+  showRing();
+  startBtn.textContent = "Resume";
+  add1Btn.style.display = "inline-block";
+  resetBtn.style.display = "inline-block";
+  hideInputs();
+  
+  // show toggle and glow so user can find it when returning
+  toggleBtn.style.display = "block";
+  toggleBtn.textContent = "▲ Hide Timer";
+  const row = container.querySelector(".task-row");
+  row?.classList.add("running-glow");
+  row?.classList.remove("timeup-highlight");
+  row?.classList.remove("pulse");
+} else if (timerData.timeUp) {
+  // Already time up persisted
+  panel.classList.add("alarm");
+  showRing();
+  updateDisplayFromMs(0);
+  startBtn.textContent = "Start";
+  add1Btn.style.display = "inline-block";
+  resetBtn.style.display = "inline-block";
+  hideInputs();
+  
+  // show toggle so user can see panel + keep red highlight
+  toggleBtn.style.display = "block";
+  toggleBtn.textContent = "▲ Hide Timer";
+  
+  const row = container.querySelector(".task-row");
+  row?.classList.add("timeup-highlight");
+  row?.classList.add("pulse");
+  row?.classList.remove("running-glow");
+} else {
+  // No active timer, reset view
+  hideRing();
+  showInputs();
+  startBtn.textContent = "Start";
+  add1Btn.style.display = "none";
+  resetBtn.style.display = "none";
+  updateDisplayFromMs(0);
+  
+  const row = container.querySelector(".task-row");
+  row?.classList.remove("running-glow");
+  row?.classList.remove("timeup-highlight");
+  row?.classList.remove("pulse");
+  toggleBtn.style.display = "none";
+}
+  }); // end tasks.forEach
+} // end renderTaskPage
+
+
+/* Focus (open) the task page and scroll/select the specific task panel
+   used when clicking the TimeUp popup */
+function focusTask(timerData) {
+  if (!timerData || !timerData._meta) return;
+  const m = timerData._meta;
+  // open the task page for that meta
+  openTaskPage(m.tab, m.weekIndex, m.dayIndex);
+  // after rendering, show the specific task's panel
+  setTimeout(() => {
+    const found = document.querySelector(`[data-task-uid="${timerData._uid}"]`);
+    if (found) {
+      const panel = found.querySelector(".task-timer-panel");
+      const toggleBtn = found.querySelector(".timer-toggle-btn");
+      if (panel) {
+        panel.classList.add("show");
+        panel.setAttribute("aria-hidden", "false");
+        panel.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+      if (toggleBtn) toggleBtn.style.display = "block";
+    }
+  }, 120); // small delay to allow renderTaskPage to complete
+}
+
+
+/* Hide task page and return to main tracker */
+/* Hide task page and return to main tracker — also restore floating menus */
+function backToMain() {
+  // hide task page & show main content
+  const taskPage = document.getElementById("taskPage");
+  if (taskPage) taskPage.style.display = "none";
+  const content = document.getElementById("content");
+  if (content) content.style.display = "block";
+  
+  // restore/move-back any floating .task-options-menu that were appended to body
+  try {
+    document.querySelectorAll('.task-options-menu').forEach(menu => {
+      if (menu._moved && menu._origParent) {
+        try {
+          menu._origParent.insertBefore(menu, menu._origNextSibling || null);
+        } catch (err) { /* ignore */ }
+        menu.style.display = "none";
+        menu._moved = false;
+        menu.style.position = menu._origPosition || "";
+        menu.style.left = menu._origLeft || "";
+        menu.style.top = menu._origTop || "";
+        menu.style.zIndex = menu._origZ || "";
+        menu.style.visibility = menu._origVisibility || "";
+      } else {
+        // if not moved, simply hide it
+        menu.style.display = "none";
+        menu.style.visibility = menu._origVisibility || "";
+      }
+      // ensure opener accessibility state reset
+      if (menu._openerBtn) menu._openerBtn.setAttribute('aria-expanded', 'false');
+    });
+  } catch (e) { /* ignore */ }
+  
+  // Clear visual context only (timers keep running)
+  window.currentTaskContext = null;
+  
+  // re-render tracker UI + persist
+  render?.();
+  saveTabs?.();
+}
+
+
+
+
+
+
+/* ---------- Update Day Progress UI ---------- */
+/* This expects you have a DOM element for day progress: recommended markup:
+   <div id="day-progress-{tab}-{weekIndex}-{dayIndex}" class="day-progress">
+     <div class="day-progress-bar"></div>
+   </div>
+   and a day container with id "day-{tab}-{weekIndex}-{dayIndex}" to toggle .completed class.
+*/
+/* ---------- REPLACE updateDayProgress WITH THIS (sanitized IDs) ---------- */
+function updateDayProgress(tab, weekIndex, dayIndex) {
+  try {
+    const safeTab = String(tab).replace(/\s+/g, '_');
+    const day = allTabs[tab].weeks[weekIndex][dayIndex];
+    const total = (day.tasks || []).length;
+    const done = (day.tasks || []).filter(t => t.done).length;
+    const pct = total === 0 ? 0 : Math.round((done / total) * 100);
+    
+    const id = `day-progress-${safeTab}-${weekIndex}-${dayIndex}`;
+    const el = document.getElementById(id);
+    if (el) {
+      const bar = el.querySelector(".day-progress-bar");
+      if (bar) bar.style.width = pct + "%";
+      el.setAttribute("aria-valuenow", pct);
+    }
+    
+    // Now toggle badge classes on the Add-Task button (if present)
+    const btnId = `taskbtn-${safeTab}-${weekIndex}-${dayIndex}`;
+    const btn = document.getElementById(btnId);
+    
+    // determine timer states for this day
+    const hasRunning = (day.tasks || []).some(t => t.timer && !t.timer.timeUp && (t.timer.running || t.timer.wasPaused || (t.timer.remainingMs > 0)));
+    const hasTimeUp = (day.tasks || []).some(t => t.timer && t.timer.timeUp);
+    
+    if (btn) {
+      btn.classList.toggle('timer-running', !!hasRunning && !hasTimeUp);
+      btn.classList.toggle('timer-timeup', !!hasTimeUp);
+    } else {
+      // fallback: optionally update day box if btn missing (older views)
+      const dayBoxId = `day-${safeTab}-${weekIndex}-${dayIndex}`;
+      const dayBox = document.getElementById(dayBoxId);
+      if (dayBox) {
+        dayBox.classList.toggle('timer-running', !!hasRunning && !hasTimeUp);
+        dayBox.classList.toggle('timer-timeup', !!hasTimeUp);
+      }
+    }
+    
+    // also keep day completed class in sync
+    const dayBoxId2 = `day-${safeTab}-${weekIndex}-${dayIndex}`;
+    const dayBox2 = document.getElementById(dayBoxId2);
+    if (dayBox2) {
+      if (done === total && total > 0) {
+        dayBox2.classList.add("completed");
+        const cb = dayBox2.querySelector("input[type='checkbox']");
+        if (cb) cb.checked = true;
+      } else {
+        dayBox2.classList.remove("completed");
+        const cb = dayBox2.querySelector("input[type='checkbox']");
+        if (cb) cb.checked = false;
+      }
+    }
+  } catch (e) {
+    console.warn("updateDayProgress error", e);
+  }
+}
+
+/* ---------- Simple confetti fallback ---------- */
+function showConfetti(durationMs = 3000) {
+  // if you already have a confetti method, call it
+  if (typeof confetti === "function") { confetti(); return; }
+  const root = document.body;
+  const wrapper = document.createElement("div");
+  wrapper.className = "simple-confetti-wrapper";
+  wrapper.style.position = "fixed";
+  wrapper.style.left = 0; wrapper.style.top = 0; wrapper.style.right = 0; wrapper.style.bottom = 0;
+  wrapper.style.pointerEvents = "none";
+  for (let i=0;i<40;i++){
+    const c = document.createElement("div");
+    c.className = "simple-confetti";
+    c.style.position = "absolute";
+  c.style.left = (Math.random()*100) + "%";
+    c.style.top = "-10%";
+    c.style.width = (6 + Math.random()*8) + "px";
+    c.style.height = (10 + Math.random()*10) + "px";
+    c.style.background = ["#ff5252","#ffd54f","#4fc3f7","#81c784","#b39ddb"][Math.floor(Math.random()*5)];
+    c.style.opacity = 0.9;
+    c.style.transform = `rotate(${Math.random()*360}deg)`;
+    c.style.animation = `simple-fall ${2+Math.random()*2}s linear forwards`;
+    wrapper.appendChild(c);
+  }
+  root.appendChild(wrapper);
+  setTimeout(()=> wrapper.remove(), durationMs + 500);
+}
+
+/* simple confetti CSS (inject once into page if not present) */
+if (!document.getElementById("simple-confetti-style")) {
+  const style = document.createElement("style");
+  style.id = "simple-confetti-style";
+  style.innerHTML = `
+    @keyframes simple-fall {
+      0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(110vh) rotate(360deg); opacity: 0.85; }
+    }
+    .simple-confetti-wrapper { z-index: 9999; }
+  `;
+  document.head.appendChild(style);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// -----------------------------------------------------------------------------
+// Boot / ensure task page hidden initially and run initial render
+// -----------------------------------------------------------------------------
+try {
+  const taskPage = document.getElementById("taskPage");
+  if (taskPage) taskPage.style.display = "none";
+} catch (e) {}
+
+render?.();
+</script>
+
+</html>
